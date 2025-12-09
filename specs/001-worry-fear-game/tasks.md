@@ -30,32 +30,32 @@
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Core domain models and services that ALL user stories depend on
+**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 ### Tests for Foundational
 
-- [ ] T008 [P] Write unit tests for Category enum in test/unit/domain/category_test.dart
-- [ ] T009 [P] Write unit tests for Scenario model in test/unit/domain/scenario_test.dart (equality, copyWith, JSON serialization)
-- [ ] T010 [P] Write unit tests for Session model in test/unit/domain/session_test.dart (creation, recordCorrect, recordIncorrect, score calculation, review list)
-- [ ] T011 [P] Write unit tests for ScenarioService in test/unit/domain/scenario_service_test.dart (random selection, at least 3 of each type, no duplicates)
+- [x] T008 [P] Write unit tests for Category enum in test/unit/domain/category_test.dart
+- [x] T009 [P] Write unit tests for Scenario model in test/unit/domain/scenario_test.dart (equality, copyWith, JSON serialization)
+- [x] T010 [P] Write unit tests for Session model in test/unit/domain/session_test.dart (creation, recordCorrect, recordIncorrect, score calculation, review list)
+- [x] T011 [P] Write unit tests for ScenarioService in test/unit/domain/scenario_service_test.dart (random selection, at least 3 of each type, no duplicates)
 
 ### Implementation for Foundational
 
-- [ ] T012 [P] Implement Category enum (fear, worry) in lib/domain/models/category.dart
-- [ ] T013 [P] Implement Scenario model in lib/domain/models/scenario.dart with id, text, emoji, correctCategory, Equatable
-- [ ] T014 [P] Implement SessionScenario value object in lib/domain/models/session_scenario.dart tracking attempts and correctness
-- [ ] T015 Implement Session aggregate root in lib/domain/models/session.dart with scenarios list, currentIndex, score, reviewList, copyWith (depends on T012-T014)
-- [ ] T016 Create all 16 scenarios (8 worry, 8 fear) as static data in lib/domain/data/scenarios.dart
-- [ ] T017 Implement ScenarioService in lib/domain/services/scenario_service.dart with getSessionScenarios() returning 10 random scenarios (depends on T016)
-- [ ] T018 [P] Create abstract AudioService interface in lib/core/audio/audio_service.dart with playSuccess(), playError(), playCelebration()
-- [ ] T019 [P] Create abstract HapticService interface in lib/core/haptic/haptic_service.dart with lightImpact(), mediumImpact()
-- [ ] T020 Implement AudioServiceImpl with audioplayers package in lib/core/audio/audio_service_impl.dart
-- [ ] T021 Implement HapticServiceImpl with vibration package in lib/core/haptic/haptic_service_impl.dart
-- [ ] T022 Create app_theme.dart in lib/core/theme/ with ThemeData, typography (clean sans-serif), and color scheme
+- [x] T012 [P] Implement Category enum (fear, worry) in lib/domain/models/category.dart
+- [x] T013 [P] Implement Scenario model in lib/domain/models/scenario.dart with id, text, emoji, correctCategory, Equatable
+- [x] T014 [P] Implement SessionScenario value object in lib/domain/models/session_scenario.dart tracking attempts and correctness
+- [x] T015 Implement Session aggregate root in lib/domain/models/session.dart with scenarios list, currentIndex, score, reviewList, copyWith (depends on T012-T014)
+- [x] T016 Create all 16 scenarios (8 worry, 8 fear) as static data in lib/domain/data/scenarios.dart
+- [x] T017 Implement ScenarioService in lib/domain/services/scenario_service.dart with getSessionScenarios() returning 10 random scenarios (depends on T016)
+- [x] T018 [P] Create abstract AudioService interface in lib/core/audio/audio_service.dart with playSuccess(), playError(), playCelebration()
+- [x] T019 [P] Create abstract HapticService interface in lib/core/haptic/haptic_service.dart with lightImpact(), mediumImpact()
+- [x] T020 Implement AudioServiceImpl with audioplayers package in lib/core/audio/audio_service_impl.dart
+- [x] T021 Implement HapticServiceImpl with vibration package in lib/core/haptic/haptic_service_impl.dart
+- [x] T022 Create app_theme.dart in lib/core/theme/ with ThemeData, typography (clean sans-serif), and color scheme
 
-**Checkpoint**: Run `flutter test test/unit/domain/` - all tests should pass. Foundation ready.
+**Checkpoint**: Run `flutter test test/unit/domain/` - all tests should pass. Foundation ready. ✅ COMPLETE (22/22 tests passing)
 
 ---
 
