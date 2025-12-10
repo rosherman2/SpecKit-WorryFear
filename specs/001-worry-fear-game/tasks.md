@@ -168,15 +168,15 @@
 
 ### Tests for User Story 4
 
-- [ ] T062 [P] [US4] Write widget tests for AccessibilityButtons in test/widget/accessibility_buttons_test.dart (buttons appear on double-tap, fire correct events)
-- [ ] T063 [P] [US4] Write widget tests for ScenarioCard double-tap in test/widget/scenario_card_accessibility_test.dart (double-tap triggers button mode)
+- [x] T062 [P] [US4] Write widget tests for AccessibilityButtons in test/widget/accessibility_buttons_test.dart (buttons appear on double-tap, fire correct events)
+- [x] T063 [P] [US4] Write widget tests for ScenarioCard double-tap in test/widget/scenario_card_accessibility_test.dart (double-tap triggers button mode)
 
 ### Implementation for User Story 4
 
-- [ ] T064 [P] [US4] Create AccessibilityButtons widget in lib/presentation/widgets/accessibility_buttons.dart with Fear and Worry buttons
-- [ ] T065 [US4] Update ScenarioCard with GestureDetector.onDoubleTap to show accessibility buttons
-- [ ] T066 [US4] Connect AccessibilityButtons to GameplayBloc with same DropOnBottle events
-- [ ] T067 [US4] Update ReviewScreen to support accessibility buttons via same mechanism
+- [x] T064 [P] [US4] Create AccessibilityButtons widget in lib/presentation/widgets/accessibility_buttons.dart with Fear and Worry buttons
+- [x] T065 [US4] Update ScenarioCard with GestureDetector.onDoubleTap to show accessibility buttons
+- [x] T066 [US4] Connect AccessibilityButtons to GameplayBloc with same DropOnBottle events
+- [x] T067 [US4] Update ReviewScreen to support accessibility buttons via same mechanism (same implementation as GameplayScreen)
 
 **Checkpoint**: Test double-tap mode. Verify identical feedback to drag-drop.
 
