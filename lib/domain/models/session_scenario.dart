@@ -23,6 +23,7 @@ class SessionScenario extends Equatable {
     this.isAnswered = false,
     this.isCorrect,
     this.attemptCount = 0,
+    this.wasEverIncorrect = false,
   });
 
   /// The underlying scenario being tracked.
@@ -40,6 +41,11 @@ class SessionScenario extends Equatable {
   /// Increments with each answer attempt (used in review mode).
   final int attemptCount;
 
+  /// Whether this scenario was ever answered incorrectly.
+  /// Once true, stays true even if later answered correctly.
+  /// Used to determine if scenario needs review.
+  final bool wasEverIncorrect;
+
   /// Records an answer attempt for this scenario.
   ///
   /// Creates a new SessionScenario with updated state reflecting the answer.
@@ -55,6 +61,8 @@ class SessionScenario extends Equatable {
       isAnswered: true,
       isCorrect: isCorrect,
       attemptCount: attemptCount + 1,
+      wasEverIncorrect:
+          wasEverIncorrect || !isCorrect, // Once wrong, always wrong
     );
   }
 
@@ -66,15 +74,23 @@ class SessionScenario extends Equatable {
     bool? isAnswered,
     bool? isCorrect,
     int? attemptCount,
+    bool? wasEverIncorrect,
   }) {
     return SessionScenario(
       scenario: scenario ?? this.scenario,
       isAnswered: isAnswered ?? this.isAnswered,
       isCorrect: isCorrect ?? this.isCorrect,
       attemptCount: attemptCount ?? this.attemptCount,
+      wasEverIncorrect: wasEverIncorrect ?? this.wasEverIncorrect,
     );
   }
 
   @override
-  List<Object?> get props => [scenario, isAnswered, isCorrect, attemptCount];
+  List<Object?> get props => [
+    scenario,
+    isAnswered,
+    isCorrect,
+    attemptCount,
+    wasEverIncorrect,
+  ];
 }

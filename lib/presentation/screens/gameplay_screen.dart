@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../application/gameplay/gameplay_bloc.dart';
 import '../../application/gameplay/gameplay_event.dart';
 import '../../application/gameplay/gameplay_state.dart';
@@ -8,12 +9,17 @@ import '../../core/haptic/haptic_service_impl.dart';
 import '../../core/theme/app_colors.dart';
 import '../../domain/models/category.dart';
 import '../../domain/models/scenario.dart';
+import '../../domain/services/onboarding_service.dart';
 import '../../domain/services/scenario_service.dart';
 import '../animations/floating_animation.dart';
+import '../animations/points_animation.dart';
+import '../widgets/bottle_glow_effect.dart';
 import '../widgets/bottle_widget.dart';
+import '../widgets/drag_hint_icon.dart';
 import '../widgets/progress_bar.dart';
 import '../widgets/scenario_card.dart';
 import '../widgets/success_animation.dart';
+import 'completion_screen.dart';
 
 /// [StatefulWidget] Main gameplay screen with drag-drop interaction.
 /// Purpose: Core game loop where users classify scenarios.
@@ -39,22 +45,38 @@ class GameplayScreen extends StatefulWidget {
 
 class _GameplayScreenState extends State<GameplayScreen> {
   late final GameplayBloc _bloc;
+  late final OnboardingService _onboardingService;
   Category? _hoveringOverBottle;
   bool _showError = false;
+  bool _showOnboardingHints = false;
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize services and BLoC (constructor injection)
     _bloc = GameplayBloc(
       scenarioService: ScenarioService(),
       audioService: AudioServiceImpl(),
       hapticService: HapticServiceImpl(),
     );
-
-    // Start the game
     _bloc.add(const GameStarted());
+
+    // Initialize onboarding service
+    _initOnboarding();
+  }
+
+  Future<void> _initOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    _onboardingService = OnboardingService(prefs);
+
+    final isFirst = await _onboardingService.isFirstTime();
+    print('🎯 Onboarding: isFirstTime = $isFirst'); // DEBUG
+    if (mounted) {
+      setState(() {
+        _showOnboardingHints = isFirst;
+        print('🎯 Onboarding: _showOnboardingHints set to $isFirst'); // DEBUG
+      });
+    }
   }
 
   @override
@@ -88,8 +110,17 @@ class _GameplayScreenState extends State<GameplayScreen> {
                   child: CircularProgressIndicator(color: AppColors.gold),
                 ),
                 GameplayPlaying() => _buildPlayingState(context, state),
-                GameplayCorrectFeedback() => const Center(
-                  child: SuccessAnimation(),
+                GameplayCorrectFeedback() => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Points animation at top
+                      PointsAnimation(),
+                      const SizedBox(height: 40),
+                      // Success animation in center
+                      const SuccessAnimation(),
+                    ],
+                  ),
                 ),
                 GameplayIncorrectFeedback() => const Center(
                   child: Text(
@@ -128,12 +159,20 @@ class _GameplayScreenState extends State<GameplayScreen> {
 
         const SizedBox(height: 40),
 
+        // Show drag hint ABOVE scenario card for first-time users
+        if (_showOnboardingHints && state.currentScenarioIndex == 0)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8), // Small gap to card
+            child: DragHintIcon(), // Bouncing arrow (now 48px)
+          ),
+
         // Scenario card (draggable)
         Expanded(
           child: Center(
             child: ScenarioCard(
               scenario: scenario,
               onAccepted: (category) {
+                // This is called by DragTarget, not directly
                 bloc.add(DroppedOnBottle(category: category));
               },
               showError: _showError,
@@ -149,8 +188,8 @@ class _GameplayScreenState extends State<GameplayScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildDragTarget(Category.fear, bloc),
-              _buildDragTarget(Category.worry, bloc),
+              _buildDragTarget(Category.fear, bloc, state),
+              _buildDragTarget(Category.worry, bloc, state),
             ],
           ),
         ),
@@ -158,7 +197,11 @@ class _GameplayScreenState extends State<GameplayScreen> {
     );
   }
 
-  Widget _buildDragTarget(Category category, GameplayBloc bloc) {
+  Widget _buildDragTarget(
+    Category category,
+    GameplayBloc bloc,
+    GameplayPlaying state,
+  ) {
     return DragTarget<Scenario>(
       onWillAcceptWithDetails: (details) {
         setState(() => _hoveringOverBottle = category);
@@ -173,81 +216,48 @@ class _GameplayScreenState extends State<GameplayScreen> {
         setState(() => _hoveringOverBottle = null);
         // Use captured bloc reference instead of context.read
         bloc.add(DroppedOnBottle(category: category));
+
+        // Mark onboarding complete after first drag
+        if (_showOnboardingHints) {
+          print('🎯 Marking onboarding complete (from DragTarget)...');
+          _onboardingService.markOnboardingComplete().then((_) {
+            print('🎯 Onboarding marked complete!');
+          });
+          setState(() => _showOnboardingHints = false);
+        }
       },
       builder: (context, candidateData, rejectedData) {
         final isHovering = _hoveringOverBottle == category;
+        final showGlow =
+            _showOnboardingHints && state.currentScenarioIndex == 0;
 
-        return FloatingAnimation(
+        Widget bottle = FloatingAnimation(
           duration: Duration(
             milliseconds: 2000 + (category == Category.fear ? 0 : 300),
           ),
           offset: 6.0,
           child: BottleWidget(category: category, isGlowing: isHovering),
         );
+
+        // Wrap with glow effect for first-time users on first scenario
+        if (showGlow) {
+          bottle = BottleGlowEffect(
+            onStart: () {
+              // Glow started
+            },
+            onComplete: () {
+              // Glow complete
+            },
+            child: bottle,
+          );
+        }
+
+        return bottle;
       },
     );
   }
 
   Widget _buildCompleteState(BuildContext context, GameplayComplete state) {
-    final scorePercent = (state.session.score / 20 * 100).round();
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('🎉', style: TextStyle(fontSize: 80)),
-            const SizedBox(height: 24),
-            const Text(
-              'Session Complete!',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              '${state.session.score} / 20 points ($scorePercent%)',
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: AppColors.gold,
-              ),
-            ),
-            const SizedBox(height: 32),
-            if (state.session.incorrectScenarios.isNotEmpty) ...[
-              Text(
-                'Review ${state.session.incorrectScenarios.length} scenarios',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.success,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 48,
-                  vertical: 20,
-                ),
-              ),
-              child: const Text(
-                'Finish',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return CompletionScreen(session: state.session);
   }
 }

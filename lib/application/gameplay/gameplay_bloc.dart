@@ -103,8 +103,13 @@ class GameplayBloc extends Bloc<GameplayEvent, GameplayState> {
       final allAnswered = updatedScenarios.every((s) => s.isAnswered);
 
       if (allAnswered) {
-        // Session complete
-        final session = Session(scenarios: updatedScenarios);
+        // Session complete - calculate final score
+        final finalScore =
+            updatedScenarios
+                .where((s) => s.isAnswered && s.isCorrect == true)
+                .length *
+            2;
+        final session = Session(scenarios: updatedScenarios, score: finalScore);
         emit(GameplayComplete(session));
       } else {
         // Advance to next scenario
@@ -164,9 +169,8 @@ class GameplayBloc extends Bloc<GameplayEvent, GameplayState> {
         ),
       );
     } else {
-      // All scenarios complete
-      final session = Session(scenarios: playingState.scenarios);
-      emit(GameplayComplete(session));
+      // All scenarios complete - use session getter to calculate score
+      emit(GameplayComplete(playingState.session));
     }
   }
 }

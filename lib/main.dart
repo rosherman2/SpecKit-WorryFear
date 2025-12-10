@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
+import 'domain/models/session_scenario.dart';
 import 'presentation/screens/gameplay_screen.dart';
 import 'presentation/screens/intro_screen.dart';
+import 'presentation/screens/review_screen.dart';
 
 /// Entry point for the Worry vs Fear cognitive training game.
 /// Initializes the app and routes.
@@ -33,6 +35,17 @@ class WorryFearApp extends StatelessWidget {
       routes: {
         '/': (context) => const IntroScreen(),
         '/gameplay': (context) => const GameplayScreen(),
+      },
+      onGenerateRoute: (settings) {
+        // Handle /review route with arguments
+        if (settings.name == '/review') {
+          final reviewScenarios = settings.arguments as List<SessionScenario>;
+          return MaterialPageRoute(
+            builder: (context) =>
+                ReviewScreen(reviewScenarios: reviewScenarios),
+          );
+        }
+        return null;
       },
     );
   }

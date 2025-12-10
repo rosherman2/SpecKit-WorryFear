@@ -77,23 +77,6 @@ class BottleWidget extends StatelessWidget {
               color: AppColors.textLight.withOpacity(0.8),
             ),
           ),
-          if (!isFear) // Worry bottle shows +2 badge
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.gold,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                '+2',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-            ),
         ],
       ),
     );

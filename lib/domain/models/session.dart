@@ -91,11 +91,10 @@ class Session extends Equatable {
   /// Gets all scenarios that were answered incorrectly.
   ///
   /// Used to populate review mode after session completion.
-  /// Returns scenarios in the order they were encountered.
+  /// Returns scenarios that were ever answered incorrectly, even if
+  /// later corrected on retry.
   List<SessionScenario> get incorrectScenarios {
-    return scenarios
-        .where((s) => s.isAnswered && s.isCorrect == false)
-        .toList();
+    return scenarios.where((s) => s.wasEverIncorrect).toList();
   }
 
   /// Checks if all scenarios have been answered.

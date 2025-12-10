@@ -86,7 +86,50 @@ void main() {
       );
 
       expect(find.text('Finish'), findsOneWidget);
-      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsAtLeastNWidgets(1));
+    });
+
+    testWidgets('shows Review Mistakes button when there are errors', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(home: CompletionScreen(session: testSession)),
+      );
+
+      // Should have Review Mistakes button since testSession has 1 incorrect
+      expect(find.text('Review Mistakes'), findsOneWidget);
+    });
+
+    testWidgets('does not show Review Mistakes button for perfect score', (
+      tester,
+    ) async {
+      // Create perfect session
+      final perfectScenarios = [
+        SessionScenario(
+          scenario: const Scenario(
+            id: '1',
+            text: 'Test 1',
+            emoji: '🎯',
+            correctCategory: Category.fear,
+          ),
+        ).recordAnswer(isCorrect: true),
+        SessionScenario(
+          scenario: const Scenario(
+            id: '2',
+            text: 'Test 2',
+            emoji: '🎯',
+            correctCategory: Category.worry,
+          ),
+        ).recordAnswer(isCorrect: true),
+      ];
+      final perfectSession = Session(scenarios: perfectScenarios, score: 4);
+
+      await tester.pumpWidget(
+        MaterialApp(home: CompletionScreen(session: perfectSession)),
+      );
+
+      // Should NOT have Review Mistakes button
+      expect(find.text('Review Mistakes'), findsNothing);
     });
   });
 }

@@ -32,8 +32,9 @@ class CompletionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final score = session.score;
     final totalScenarios = session.scenarios.length;
+    // Count scenarios that were correct on first attempt (never incorrect)
     final correctCount = session.scenarios
-        .where((s) => s.isAnswered && s.isCorrect == true)
+        .where((s) => s.isAnswered && !s.wasEverIncorrect)
         .length;
     final percentage = ((correctCount / totalScenarios) * 100).round();
     final reviewCount = session.incorrectScenarios.length;
@@ -133,6 +134,39 @@ class CompletionScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 40),
+
+                // Review Mistakes button (if there are errors)
+                if (reviewCount > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/review',
+                          arguments: session.incorrectScenarios,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.gold,
+                        foregroundColor: AppColors.textPrimary,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 48,
+                          vertical: 20,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Text(
+                        'Review Mistakes',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
 
                 // Finish button
                 ElevatedButton(

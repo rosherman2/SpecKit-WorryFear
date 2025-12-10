@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/app_colors.dart';
 import '../../domain/models/category.dart';
+import '../../domain/services/onboarding_service.dart';
 import '../animations/floating_animation.dart';
 import '../widgets/bottle_widget.dart';
 import '../widgets/expandable_section.dart';
@@ -124,6 +126,34 @@ class _IntroScreenState extends State<IntroScreen> {
                       fontSize: 14,
                       color: AppColors.textPrimary,
                       height: 1.5,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // DEBUG: Reset onboarding button
+                TextButton(
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    final service = OnboardingService(prefs);
+                    await service.reset();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Onboarding reset! Restart the game to see hints.',
+                          ),
+                          backgroundColor: AppColors.gold,
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text(
+                    '🔄 Reset Onboarding (Debug)',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
                     ),
                   ),
                 ),

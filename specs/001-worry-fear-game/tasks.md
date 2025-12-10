@@ -90,6 +90,7 @@
 - [x] T035 [P] [US1] Implement custom ProgressBar widget with scenario counter and gold-themed progress indicator
 - [x] T036 [P] [US1] Implement success_animation.dart with 5 random animations (high-five, thumbs up, star burst, confetti, checkmark)
 - [x] T037 [P] [US1] Implement ExpandableSection for Scientific Background with smooth animations and rotating chevron
+- [x] T053 [P] [US1] Implement points_animation.dart with "+2" text flying upward and fading out with sparkle particles (FR-027, 1s duration)
 
 **Screens:**
 
@@ -118,20 +119,20 @@
 
 ### Tests for User Story 2
 
-- [ ] T044 [P] [US2] Write bloc tests for ReviewBloc in test/unit/application/review_bloc_test.dart (start review, correct answer, first wrong answer, second wrong answer triggers auto-correct, review complete)
-- [ ] T045 [P] [US2] Write widget tests for ReviewScreen in test/widget/review_screen_test.dart (header text, review progress, educational text display)
+- [x] T044 [P] [US2] Write bloc tests for ReviewBloc in test/unit/application/review_bloc_test.dart (start review, correct answer, first wrong answer, second wrong answer triggers auto-correct, review complete)
+- [x] T045 [P] [US2] Write widget tests for ReviewScreen in test/widget/review_screen_test.dart (header text, review progress, educational text display)
 
 ### Implementation for User Story 2
 
-- [ ] T046 [US2] Create review_event.dart in lib/application/review/ with events: ReviewStarted, AnswerAttempted, AutoCorrectionComplete, NextReviewItem
-- [ ] T047 [US2] Create review_state.dart in lib/application/review/ with states: ReviewInitial, ReviewPlaying, ReviewAutoCorrection, ReviewComplete
-- [ ] T048 [US2] Implement ReviewBloc in lib/application/review/review_bloc.dart with auto-correction timer (1.5s), educational text logic
-- [ ] T049 [US2] Implement ReviewScreen in lib/presentation/screens/review_screen.dart with header, progress indicator, reuse ScenarioCard and BottleWidget
-- [ ] T050 [US2] Add educational_text.dart widget in lib/presentation/widgets/ displaying "Fear is about immediate danger" or "Worry is about future what-ifs"
-- [ ] T051 [US2] Update GameplayBloc to transition to ReviewMode when session has errors
-- [ ] T052 [US2] Update app.dart routes to include review screen
+- [x] T046 [US2] Create review_event.dart in lib/application/review/ with events: ReviewStarted, AnswerAttempted, AutoCorrectionComplete, NextReviewItem
+- [x] T047 [US2] Create review_state.dart in lib/application/review/ with states: ReviewInitial, ReviewPlaying, ReviewAutoCorrection, ReviewComplete
+- [x] T048 [US2] Implement ReviewBloc in lib/application/review/review_bloc.dart with auto-correction timer (1.5s), educational text logic
+- [x] T049 [US2] Implement ReviewScreen in lib/presentation/screens/review_screen.dart with header, progress indicator, reuse ScenarioCard and BottleWidget
+- [x] T050 [US2] Educational text integrated into ReviewBloc and ReviewScreen auto-correction display
+- [x] T051 [US2] Update CompletionScreen to show "Review Mistakes" button when session has errors
+- [x] T052 [US2] Update main.dart routes to include /review route with onGenerateRoute
 
-**Checkpoint**: Test by playing session with intentional errors. Review mode should work independently.
+**Checkpoint**: 🎉 Phase 4 COMPLETE! 71/71 tests passing. Review Mode fully functional with auto-correction!
 
 ---
 
@@ -143,17 +144,17 @@
 
 ### Tests for User Story 3
 
-- [ ] T053 [P] [US3] Write unit tests for OnboardingService in test/unit/domain/onboarding_service_test.dart (isFirstTime, markOnboardingComplete, persistence)
-- [ ] T054 [P] [US3] Write widget tests for DragHintIcon in test/widget/drag_hint_test.dart (appears for 1 second, fades out)
-- [ ] T055 [P] [US3] Write widget tests for BottleGlow in test/widget/bottle_glow_test.dart (appears after 2-3s, pulses, fades after 2-3s)
+- [x] T054 [P] [US3] Write unit tests for OnboardingService in test/unit/domain/onboarding_service_test.dart (isFirstTime, markOnboardingComplete, persistence)
+- [x] T055 [P] [US3] Write widget tests for DragHintIcon in test/widget/drag_hint_test.dart (appears for 1 second, fades out)
+- [x] T056 [P] [US3] Write widget tests for BottleGlow in test/widget/bottle_glow_test.dart (appears after 2-3s, pulses, fades after 2-3s)
 
 ### Implementation for User Story 3
 
-- [ ] T056 [US3] Create OnboardingService in lib/domain/services/onboarding_service.dart with isFirstTime(), markComplete() using SharedPreferences
-- [ ] T057 [P] [US3] Create DragHintIcon widget in lib/presentation/widgets/drag_hint_icon.dart with finger icon, 1-second fade animation
-- [ ] T058 [P] [US3] Create BottleGlowEffect widget in lib/presentation/widgets/bottle_glow_effect.dart with gold pulsing glow, 2-3s timer trigger
-- [ ] T059 [US3] Update GameplayScreen to integrate OnboardingService, show hints on first scenario only
-- [ ] T060 [US3] Add OnboardingService to DI wiring in main.dart
+- [x] T057 [US3] Create OnboardingService in lib/domain/services/onboarding_service.dart with isFirstTime(), markComplete() using SharedPreferences
+- [x] T058 [P] [US3] Create DragHintIcon widget in lib/presentation/widgets/drag_hint_icon.dart with finger icon, 1-second fade animation
+- [x] T059 [P] [US3] Create BottleGlowEffect widget in lib/presentation/widgets/bottle_glow_effect.dart with gold pulsing glow, 2-3s timer trigger
+- [x] T060 [US3] Update GameplayScreen to integrate OnboardingService, show hints on first scenario only
+- [x] T061 [US3] Add OnboardingService to DI wiring in main.dart (initialized per-screen in GameplayScreen)
 
 **Checkpoint**: Test with fresh install - hints appear. Test second session - no hints.
 
@@ -167,21 +168,21 @@
 
 ### Tests for User Story 4
 
-- [ ] T061 [P] [US4] Write widget tests for AccessibilityButtons in test/widget/accessibility_buttons_test.dart (buttons appear on double-tap, fire correct events)
-- [ ] T062 [P] [US4] Write widget tests for ScenarioCard double-tap in test/widget/scenario_card_accessibility_test.dart (double-tap triggers button mode)
+- [ ] T062 [P] [US4] Write widget tests for AccessibilityButtons in test/widget/accessibility_buttons_test.dart (buttons appear on double-tap, fire correct events)
+- [ ] T063 [P] [US4] Write widget tests for ScenarioCard double-tap in test/widget/scenario_card_accessibility_test.dart (double-tap triggers button mode)
 
 ### Implementation for User Story 4
 
-- [ ] T063 [P] [US4] Create AccessibilityButtons widget in lib/presentation/widgets/accessibility_buttons.dart with Fear and Worry buttons
-- [ ] T064 [US4] Update ScenarioCard with GestureDetector.onDoubleTap to show accessibility buttons
-- [ ] T065 [US4] Connect AccessibilityButtons to GameplayBloc with same DropOnBottle events
-- [ ] T066 [US4] Update ReviewScreen to support accessibility buttons via same mechanism
+- [ ] T064 [P] [US4] Create AccessibilityButtons widget in lib/presentation/widgets/accessibility_buttons.dart with Fear and Worry buttons
+- [ ] T065 [US4] Update ScenarioCard with GestureDetector.onDoubleTap to show accessibility buttons
+- [ ] T066 [US4] Connect AccessibilityButtons to GameplayBloc with same DropOnBottle events
+- [ ] T067 [US4] Update ReviewScreen to support accessibility buttons via same mechanism
 
 **Checkpoint**: Test double-tap mode. Verify identical feedback to drag-drop.
 
 ---
 
-## Phase 7: Polish & Cross-Cutting Concerns
+## Phase 7: Polish & Cross-Cuttingִִ Concerns
 
 **Purpose**: Final quality improvements affecting all user stories
 
