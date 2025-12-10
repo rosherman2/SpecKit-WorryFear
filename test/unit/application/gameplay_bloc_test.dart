@@ -47,6 +47,7 @@ void main() {
     ).thenReturn(testScenarios);
     when(() => mockAudioService.playSuccess()).thenAnswer((_) async {});
     when(() => mockAudioService.playError()).thenAnswer((_) async {});
+    when(() => mockAudioService.playCelebration()).thenAnswer((_) async {});
     when(() => mockHapticService.lightImpact()).thenAnswer((_) async {});
     when(() => mockHapticService.mediumImpact()).thenAnswer((_) async {});
   });
@@ -188,6 +189,10 @@ void main() {
           true,
         ),
       ],
+      verify: (_) {
+        verify(() => mockAudioService.playSuccess()).called(1);
+        verify(() => mockAudioService.playCelebration()).called(1);
+      },
     );
 
     blocTest<GameplayBloc, GameplayState>(

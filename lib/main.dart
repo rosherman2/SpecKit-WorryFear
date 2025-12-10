@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
+import 'core/utils/app_logger.dart';
 import 'domain/models/session_scenario.dart';
 import 'presentation/screens/gameplay_screen.dart';
 import 'presentation/screens/intro_screen.dart';
 import 'presentation/screens/review_screen.dart';
 
 /// Entry point for the Worry vs Fear cognitive training game.
-/// Initializes the app and routes.
-void main() {
-  // TODO: Initialize AppLogger in future iteration
-  // AppLogger.initialize(format: LogFormat.console);
+/// Initializes the app, logger, and routes.
+void main() async {
+  // Ensure Flutter binding is initialized for async operations
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize structured logging per constitution Principle I
+  await AppLogger.initialize(format: LogFormat.console);
+  AppLogger.info('main', 'main', () => 'Application starting');
 
   runApp(const WorryFearApp());
 }

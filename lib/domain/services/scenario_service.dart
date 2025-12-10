@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../../core/utils/app_logger.dart';
 import '../data/scenarios.dart';
 import '../models/session_scenario.dart';
 
@@ -32,10 +33,23 @@ class ScenarioService {
   ///
   /// Returns: List of 10 SessionScenario objects in random order
   List<SessionScenario> getSessionScenarios() {
+    AppLogger.debug(
+      'ScenarioService',
+      'getSessionScenarios',
+      () =>
+          'Selecting scenarios from pool of ${Scenarios.worryScenarios.length + Scenarios.fearScenarios.length}',
+    );
+
     // Determine split (ensure at least 3 of each type)
     // Random number between 3 and 7 for worry count
     final worryCount = 3 + _random.nextInt(5); // 3, 4, 5, 6, or 7
     final fearCount = 10 - worryCount; // Remaining slots
+
+    AppLogger.debug(
+      'ScenarioService',
+      'getSessionScenarios',
+      () => 'Selected $worryCount worry and $fearCount fear scenarios',
+    );
 
     // Randomly select from each pool
     final selectedWorry = _selectRandom(Scenarios.worryScenarios, worryCount);

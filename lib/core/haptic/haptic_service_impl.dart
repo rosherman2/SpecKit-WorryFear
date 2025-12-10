@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:vibration/vibration.dart';
+import '../utils/app_logger.dart';
 import 'haptic_service.dart';
 
 /// [Service] Implementation of HapticService using vibration package.
@@ -14,8 +14,18 @@ import 'haptic_service.dart';
 /// await hapticService.lightImpact();
 /// ```
 class HapticServiceImpl implements HapticService {
+  // ============================================================
+  // Public API Methods
+  // ============================================================
+
   @override
   Future<void> lightImpact() async {
+    AppLogger.debug(
+      'HapticServiceImpl',
+      'lightImpact',
+      () => 'Triggering light haptic',
+    );
+
     try {
       // Check if device has vibration capability
       final hasVibrator = await Vibration.hasVibrator();
@@ -26,14 +36,22 @@ class HapticServiceImpl implements HapticService {
       }
     } catch (e) {
       // Graceful degradation on devices without haptic support
-      if (kDebugMode) {
-        debugPrint('HapticService: Failed to provide light impact: $e');
-      }
+      AppLogger.warning(
+        'HapticServiceImpl',
+        'lightImpact',
+        () => 'Failed to provide light impact: $e',
+      );
     }
   }
 
   @override
   Future<void> mediumImpact() async {
+    AppLogger.debug(
+      'HapticServiceImpl',
+      'mediumImpact',
+      () => 'Triggering medium haptic',
+    );
+
     try {
       // Check if device has vibration capability
       final hasVibrator = await Vibration.hasVibrator();
@@ -44,9 +62,11 @@ class HapticServiceImpl implements HapticService {
       }
     } catch (e) {
       // Graceful degradation on devices without haptic support
-      if (kDebugMode) {
-        debugPrint('HapticService: Failed to provide medium impact: $e');
-      }
+      AppLogger.warning(
+        'HapticServiceImpl',
+        'mediumImpact',
+        () => 'Failed to provide medium impact: $e',
+      );
     }
   }
 }

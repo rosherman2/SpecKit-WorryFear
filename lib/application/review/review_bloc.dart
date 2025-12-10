@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/audio/audio_service.dart';
 import '../../core/haptic/haptic_service.dart';
+import '../../core/utils/app_logger.dart';
 import '../../domain/models/category.dart';
 import 'review_event.dart';
 import 'review_state.dart';
@@ -38,6 +39,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
   /// Handles review session start.
   void _onReviewStarted(ReviewStarted event, Emitter<ReviewState> emit) {
+    AppLogger.info(
+      'ReviewBloc',
+      '_onReviewStarted',
+      () => 'Starting review with ${event.reviewScenarios.length} scenarios',
+    );
     emit(ReviewPlaying(event.reviewScenarios));
   }
 
@@ -55,6 +61,12 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
     if (isCorrect) {
       // Correct answer
+      AppLogger.info(
+        'ReviewBloc',
+        '_onAnswerAttempted',
+        () =>
+            'Correct answer for review scenario ${playingState.currentIndex + 1}',
+      );
       await audioService.playSuccess();
       emit(const ReviewCorrectFeedback());
 
@@ -77,6 +89,11 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       }
     } else {
       // Incorrect answer
+      AppLogger.info(
+        'ReviewBloc',
+        '_onAnswerAttempted',
+        () => 'Incorrect answer, attempt ${playingState.attemptCount + 1}',
+      );
       await audioService.playError();
       await hapticService.mediumImpact();
       emit(const ReviewIncorrectFeedback());
@@ -89,6 +106,13 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
         // Second failure - trigger auto-correction
         final correctCategory = currentScenario.scenario.correctCategory;
         final educationalText = _getEducationalText(correctCategory);
+
+        AppLogger.info(
+          'ReviewBloc',
+          '_onAnswerAttempted',
+          () =>
+              'Auto-correction triggered for category: ${correctCategory.name}',
+        );
 
         emit(
           ReviewAutoCorrection(

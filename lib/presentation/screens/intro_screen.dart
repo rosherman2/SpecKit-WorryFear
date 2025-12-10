@@ -63,11 +63,11 @@ class _IntroScreenState extends State<IntroScreen> {
                 const SizedBox(height: 48),
 
                 // Bottles (FR-007 to FR-010)
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                  children: const [
                     FloatingAnimation(
-                      duration: const Duration(milliseconds: 2000),
+                      duration: Duration(milliseconds: 2000),
                       offset: 6.0,
                       child: const BottleWidget(
                         category: Category.fear,
@@ -75,7 +75,7 @@ class _IntroScreenState extends State<IntroScreen> {
                       ),
                     ),
                     FloatingAnimation(
-                      duration: const Duration(milliseconds: 2300),
+                      duration: Duration(milliseconds: 2300),
                       offset: 6.0,
                       child: const BottleWidget(
                         category: Category.worry,
@@ -112,9 +112,9 @@ class _IntroScreenState extends State<IntroScreen> {
                 const SizedBox(height: 32),
 
                 // Expandable Scientific Background (FR-012 to FR-015)
-                ExpandableSection(
+                const ExpandableSection(
                   title: 'Scientific Background',
-                  content: const Text(
+                  content: Text(
                     'Fear and worry are distinct emotional responses:\n\n'
                     '• Fear activates when facing immediate danger, triggering '
                     'the fight-or-flight response to protect you now.\n\n'

@@ -37,10 +37,10 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
 
       // Card theme
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: AppColors.cardBackground,
         elevation: 2,
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
       ),

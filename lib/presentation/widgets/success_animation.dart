@@ -62,18 +62,21 @@ class _SuccessAnimationState extends State<SuccessAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return switch (_animationType) {
-          0 => _buildHighFive(),
-          1 => _buildThumbsUp(),
-          2 => _buildStarBurst(),
-          3 => _buildConfetti(),
-          4 => _buildCheckmark(),
-          _ => _buildHighFive(),
-        };
-      },
+    // RepaintBoundary isolates animation repaints from parent widgets
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return switch (_animationType) {
+            0 => _buildHighFive(),
+            1 => _buildThumbsUp(),
+            2 => _buildStarBurst(),
+            3 => _buildConfetti(),
+            4 => _buildCheckmark(),
+            _ => _buildHighFive(),
+          };
+        },
+      ),
     );
   }
 

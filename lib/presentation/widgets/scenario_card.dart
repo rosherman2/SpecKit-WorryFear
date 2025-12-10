@@ -98,67 +98,74 @@ class _ScenarioCardState extends State<ScenarioCard>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onDoubleTap: () {
-        setState(() {
-          _showAccessibilityButtons = !_showAccessibilityButtons;
-        });
-      },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Draggable<Scenario>(
-            data: widget.scenario,
-            onDragStarted: () {
-              setState(() {
-                _isDragging = true;
-                _showAccessibilityButtons = false; // Hide buttons when dragging
-              });
-            },
-            onDragEnd: (_) {
-              setState(() => _isDragging = false);
-              // Trigger spring bounce animation on snap-back
-              _springController.forward(from: 0.0);
-            },
-            feedback: _buildCardContent(isDragging: true, opacity: 0.8),
-            childWhenDragging: Opacity(
-              opacity: 0.3,
-              child: _buildCardContent(isDragging: false),
-            ),
-            child: AnimatedBuilder(
-              animation: Listenable.merge([_shakeAnimation, _springAnimation]),
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _springAnimation.value,
-                  child: Transform.translate(
-                    offset: Offset(_shakeAnimation.value, 0),
-                    child: child,
-                  ),
-                );
+    // RepaintBoundary isolates card repaints from parent widgets for better performance
+    return RepaintBoundary(
+      child: GestureDetector(
+        onDoubleTap: () {
+          setState(() {
+            _showAccessibilityButtons = !_showAccessibilityButtons;
+          });
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Draggable<Scenario>(
+              data: widget.scenario,
+              onDragStarted: () {
+                setState(() {
+                  _isDragging = true;
+                  _showAccessibilityButtons =
+                      false; // Hide buttons when dragging
+                });
               },
-              child: AnimatedScale(
-                scale: _isDragging ? 1.05 : 1.0,
-                duration: const Duration(milliseconds: 100),
+              onDragEnd: (_) {
+                setState(() => _isDragging = false);
+                // Trigger spring bounce animation on snap-back
+                _springController.forward(from: 0.0);
+              },
+              feedback: _buildCardContent(isDragging: true, opacity: 0.8),
+              childWhenDragging: Opacity(
+                opacity: 0.3,
                 child: _buildCardContent(isDragging: false),
               ),
-            ),
-          ),
-          // Accessibility buttons overlay
-          if (_showAccessibilityButtons)
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-                child: Center(
-                  child: AccessibilityButtons(
-                    onCategorySelected: (category) {
-                      setState(() => _showAccessibilityButtons = false);
-                      widget.onAccepted(category);
-                    },
-                  ),
+              child: AnimatedBuilder(
+                animation: Listenable.merge([
+                  _shakeAnimation,
+                  _springAnimation,
+                ]),
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _springAnimation.value,
+                    child: Transform.translate(
+                      offset: Offset(_shakeAnimation.value, 0),
+                      child: child,
+                    ),
+                  );
+                },
+                child: AnimatedScale(
+                  scale: _isDragging ? 1.05 : 1.0,
+                  duration: const Duration(milliseconds: 100),
+                  child: _buildCardContent(isDragging: false),
                 ),
               ),
             ),
-        ],
+            // Accessibility buttons overlay
+            if (_showAccessibilityButtons)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: AccessibilityButtons(
+                      onCategorySelected: (category) {
+                        setState(() => _showAccessibilityButtons = false);
+                        widget.onAccepted(category);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

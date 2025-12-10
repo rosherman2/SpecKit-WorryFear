@@ -1,5 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/foundation.dart';
+import '../utils/app_logger.dart';
 import 'audio_service.dart';
 
 /// [Service] Implementation of AudioService using audioplayers package.
@@ -18,62 +18,81 @@ class AudioServiceImpl implements AudioService {
   /// Audio player instance for sound effects.
   final AudioPlayer _player = AudioPlayer();
 
+  // ============================================================
+  // Public API Methods
+  // ============================================================
+
   @override
   Future<void> playSuccess() async {
-    try {
-      // TODO: Load actual success sound asset in Phase 7 (T074)
-      // For now, using placeholder - will be replaced with assets/sounds/success.mp3
-      if (kDebugMode) {
-        debugPrint('AudioService: Playing success sound');
-      }
+    AppLogger.debug(
+      'AudioServiceImpl',
+      'playSuccess',
+      () => 'Playing success sound',
+    );
 
-      // await _player.play(AssetSource('sounds/success.mp3'));
+    try {
+      await _player.play(AssetSource('sounds/success.mp3'));
     } catch (e) {
-      // FR-079: Gracefully handle audio failures (silent mode, etc.)
-      if (kDebugMode) {
-        debugPrint('AudioService: Failed to play success sound: $e');
-      }
+      // FR-079: Gracefully handle audio failures (silent mode, missing files, etc.)
+      AppLogger.warning(
+        'AudioServiceImpl',
+        'playSuccess',
+        () => 'Failed to play success sound: $e',
+      );
     }
   }
 
   @override
   Future<void> playError() async {
-    try {
-      // TODO: Load actual error sound asset in Phase 7 (T074)
-      // For now, using placeholder - will be replaced with assets/sounds/error.mp3
-      if (kDebugMode) {
-        debugPrint('AudioService: Playing error sound');
-      }
+    AppLogger.debug(
+      'AudioServiceImpl',
+      'playError',
+      () => 'Playing error sound',
+    );
 
-      // await _player.play(AssetSource('sounds/error.mp3'));
+    try {
+      await _player.play(AssetSource('sounds/error.mp3'));
     } catch (e) {
       // FR-079: Gracefully handle audio failures
-      if (kDebugMode) {
-        debugPrint('AudioService: Failed to play error sound: $e');
-      }
+      AppLogger.warning(
+        'AudioServiceImpl',
+        'playError',
+        () => 'Failed to play error sound: $e',
+      );
     }
   }
 
   @override
   Future<void> playCelebration() async {
-    try {
-      // TODO: Load actual celebration sound asset in Phase 7 (T074)
-      // For now, using placeholder - will be replaced with assets/sounds/celebration.mp3
-      if (kDebugMode) {
-        debugPrint('AudioService: Playing celebration sound');
-      }
+    AppLogger.debug(
+      'AudioServiceImpl',
+      'playCelebration',
+      () => 'Playing celebration sound',
+    );
 
-      // await _player.play(AssetSource('sounds/celebration.mp3'));
+    try {
+      await _player.play(AssetSource('sounds/celebration.mp3'));
     } catch (e) {
       // FR-079: Gracefully handle audio failures
-      if (kDebugMode) {
-        debugPrint('AudioService: Failed to play celebration sound: $e');
-      }
+      AppLogger.warning(
+        'AudioServiceImpl',
+        'playCelebration',
+        () => 'Failed to play celebration sound: $e',
+      );
     }
   }
 
+  // ============================================================
+  // Lifecycle Management
+  // ============================================================
+
   @override
   void dispose() {
+    AppLogger.debug(
+      'AudioServiceImpl',
+      'dispose',
+      () => 'Disposing audio player',
+    );
     _player.dispose();
   }
 }

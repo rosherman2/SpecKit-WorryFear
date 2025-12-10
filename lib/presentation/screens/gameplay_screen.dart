@@ -7,6 +7,7 @@ import '../../application/gameplay/gameplay_state.dart';
 import '../../core/audio/audio_service_impl.dart';
 import '../../core/haptic/haptic_service_impl.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/app_logger.dart';
 import '../../domain/models/category.dart';
 import '../../domain/models/scenario.dart';
 import '../../domain/services/onboarding_service.dart';
@@ -70,11 +71,19 @@ class _GameplayScreenState extends State<GameplayScreen> {
     _onboardingService = OnboardingService(prefs);
 
     final isFirst = await _onboardingService.isFirstTime();
-    print('🎯 Onboarding: isFirstTime = $isFirst'); // DEBUG
+    AppLogger.debug(
+      'GameplayScreen',
+      '_initOnboarding',
+      () => 'isFirstTime = $isFirst',
+    );
     if (mounted) {
       setState(() {
         _showOnboardingHints = isFirst;
-        print('🎯 Onboarding: _showOnboardingHints set to $isFirst'); // DEBUG
+        AppLogger.info(
+          'GameplayScreen',
+          '_initOnboarding',
+          () => '_showOnboardingHints set to $isFirst',
+        );
       });
     }
   }
@@ -110,15 +119,15 @@ class _GameplayScreenState extends State<GameplayScreen> {
                   child: CircularProgressIndicator(color: AppColors.gold),
                 ),
                 GameplayPlaying() => _buildPlayingState(context, state),
-                GameplayCorrectFeedback() => Center(
+                GameplayCorrectFeedback() => const Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // Points animation at top
                       PointsAnimation(),
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40),
                       // Success animation in center
-                      const SuccessAnimation(),
+                      SuccessAnimation(),
                     ],
                   ),
                 ),
@@ -161,8 +170,8 @@ class _GameplayScreenState extends State<GameplayScreen> {
 
         // Show drag hint ABOVE scenario card for first-time users
         if (_showOnboardingHints && state.currentScenarioIndex == 0)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8), // Small gap to card
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8), // Small gap to card
             child: DragHintIcon(), // Bouncing arrow (now 48px)
           ),
 
@@ -219,9 +228,17 @@ class _GameplayScreenState extends State<GameplayScreen> {
 
         // Mark onboarding complete after first drag
         if (_showOnboardingHints) {
-          print('🎯 Marking onboarding complete (from DragTarget)...');
+          AppLogger.info(
+            'GameplayScreen',
+            'onAcceptWithDetails',
+            () => 'Marking onboarding complete',
+          );
           _onboardingService.markOnboardingComplete().then((_) {
-            print('🎯 Onboarding marked complete!');
+            AppLogger.info(
+              'GameplayScreen',
+              'onAcceptWithDetails',
+              () => 'Onboarding marked complete',
+            );
           });
           setState(() => _showOnboardingHints = false);
         }

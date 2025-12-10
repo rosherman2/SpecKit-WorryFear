@@ -226,8 +226,6 @@ class AppLogger {
         );
         _logSink?.writeln(jsonEncode(json));
       }
-
-      await _logSink?.flush();
     } catch (e) {
       debugPrint('AppLogger file write error: $e');
     }

@@ -37,47 +37,50 @@ class BottleWidget extends StatelessWidget {
     final label = isFear ? 'Fear' : 'Worry';
     final subtitle = isFear ? '(Immediate)' : '(Future)';
 
-    return Container(
-      width: 120,
-      height: 180,
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          if (isGlowing)
-            const BoxShadow(
-              color: AppColors.glowGold,
-              blurRadius: 20,
-              spreadRadius: 5,
+    // RepaintBoundary isolates repaints from parent widgets for better performance
+    return RepaintBoundary(
+      child: Container(
+        width: 120,
+        height: 180,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            if (isGlowing)
+              const BoxShadow(
+                color: AppColors.glowGold,
+                blurRadius: 20,
+                spreadRadius: 5,
+              ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(icon, style: const TextStyle(fontSize: 40)),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(icon, style: const TextStyle(fontSize: 40)),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textLight,
+              ),
             ),
-          ),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.textLight.withOpacity(0.8),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.textLight.withOpacity(0.8),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

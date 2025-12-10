@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/utils/app_logger.dart';
 
 /// [Service] Manages first-time user onboarding state.
 /// Purpose: Detects first-time users and tracks onboarding completion.
@@ -26,14 +27,20 @@ class OnboardingService {
   /// Key for storing onboarding completion status.
   static const String _onboardingCompleteKey = 'onboarding_complete';
 
+  // ============================================================
+  // Public API Methods
+  // ============================================================
+
   /// Checks if this is the user's first time using the app.
   ///
   /// Returns true if onboarding has never been completed, false otherwise.
   /// This check is performed asynchronously as it reads from storage.
   Future<bool> isFirstTime() async {
     final isComplete = _prefs.getBool(_onboardingCompleteKey) ?? false;
-    print(
-      '🔍 OnboardingService.isFirstTime: isComplete=$isComplete, returning ${!isComplete}',
+    AppLogger.debug(
+      'OnboardingService',
+      'isFirstTime',
+      () => 'isComplete=$isComplete, returning ${!isComplete}',
     );
     return !isComplete;
   }
@@ -43,13 +50,19 @@ class OnboardingService {
   /// Persists the completion status so future calls to [isFirstTime]
   /// will return false. Safe to call multiple times.
   Future<void> markOnboardingComplete() async {
-    print(
-      '💾 OnboardingService.markOnboardingComplete: Setting $_onboardingCompleteKey = true',
+    AppLogger.info(
+      'OnboardingService',
+      'markOnboardingComplete',
+      () => 'Setting onboarding complete',
     );
     await _prefs.setBool(_onboardingCompleteKey, true);
+
+    // Verify the write was successful
     final verify = _prefs.getBool(_onboardingCompleteKey);
-    print(
-      '✅ OnboardingService.markOnboardingComplete: Verified value = $verify',
+    AppLogger.debug(
+      'OnboardingService',
+      'markOnboardingComplete',
+      () => 'Verified value = $verify',
     );
   }
 
@@ -58,6 +71,11 @@ class OnboardingService {
   /// Clears the completion flag so [isFirstTime] will return true again.
   /// Typically only used in tests or debug builds.
   Future<void> reset() async {
+    AppLogger.debug(
+      'OnboardingService',
+      'reset',
+      () => 'Clearing onboarding state',
+    );
     await _prefs.remove(_onboardingCompleteKey);
   }
 }

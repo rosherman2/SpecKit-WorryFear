@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/audio/audio_service.dart';
 import '../../core/haptic/haptic_service.dart';
+import '../../core/utils/app_logger.dart';
 import '../../domain/models/session.dart';
 import '../../domain/services/scenario_service.dart';
 import 'gameplay_event.dart';
@@ -55,8 +56,20 @@ class GameplayBloc extends Bloc<GameplayEvent, GameplayState> {
     GameStarted event,
     Emitter<GameplayState> emit,
   ) async {
+    AppLogger.info(
+      'GameplayBloc',
+      '_onGameStarted',
+      () => 'Starting new game session',
+    );
+
     // Get 10 random scenarios from service
     final scenarios = scenarioService.getSessionScenarios();
+
+    AppLogger.debug(
+      'GameplayBloc',
+      '_onGameStarted',
+      () => 'Loaded ${scenarios.length} scenarios',
+    );
 
     // Transition to playing state
     emit(GameplayPlaying(scenarios, currentScenarioIndex: 0));
@@ -86,6 +99,13 @@ class GameplayBloc extends Bloc<GameplayEvent, GameplayState> {
 
     if (isCorrect) {
       // Correct answer
+      AppLogger.info(
+        'GameplayBloc',
+        '_onDroppedOnBottle',
+        () =>
+            'Correct answer for scenario ${playingState.currentScenarioIndex + 1}',
+      );
+
       await audioService.playSuccess(); // FR-029: Play success sound
 
       // Update scenario as answered correctly
@@ -104,6 +124,8 @@ class GameplayBloc extends Bloc<GameplayEvent, GameplayState> {
 
       if (allAnswered) {
         // Session complete - calculate final score
+        await audioService.playCelebration(); // FR-030: Play celebration sound
+
         final finalScore =
             updatedScenarios
                 .where((s) => s.isAnswered && s.isCorrect == true)
@@ -122,6 +144,13 @@ class GameplayBloc extends Bloc<GameplayEvent, GameplayState> {
       }
     } else {
       // Incorrect answer
+      AppLogger.info(
+        'GameplayBloc',
+        '_onDroppedOnBottle',
+        () =>
+            'Incorrect answer for scenario ${playingState.currentScenarioIndex + 1}',
+      );
+
       await audioService.playError(); // FR-035: Play error sound
       await hapticService.mediumImpact(); // FR-036: Haptic pulse
 
