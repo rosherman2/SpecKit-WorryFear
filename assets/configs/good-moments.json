@@ -1,0 +1,129 @@
+{
+    "gameId": "good-moments-vs-other",
+    "version": "1.0",
+    "intro": {
+        "title": "Recognize Good Moments",
+        "educationalText": [
+            "Our brains naturally focus on threats and problems, often missing positive moments.",
+            "Training yourself to notice good moments builds resilience and improves mood over time."
+        ],
+        "scientificTitle": "📚 Scientific Background",
+        "scientificContent": "Research in positive psychology shows that:\n\n• The brain has a negativity bias, evolved to keep us safe by focusing on threats.\n\n• Deliberately noticing positive moments rewires neural pathways, strengthening positive emotion circuits.\n\n• Regular practice of recognizing good moments is linked to reduced anxiety, better sleep, and improved overall wellbeing.\n\nThis exercise trains your attention to balance threat-detection with appreciation."
+    },
+    "categoryA": {
+        "id": "good-moment",
+        "name": "Good Moment",
+        "subtitle": "(Notice this)",
+        "colorStart": "#34D399",
+        "colorEnd": "#059669",
+        "icon": "✨",
+        "educationalText": "Good moments are worth pausing to notice and appreciate."
+    },
+    "categoryB": {
+        "id": "other-moment",
+        "name": "Other Moment",
+        "subtitle": "(Let it pass)",
+        "colorStart": "#64748B",
+        "colorEnd": "#475569",
+        "icon": "➡️",
+        "educationalText": "Neutral moments are just part of daily life - no need to dwell on them."
+    },
+    "scenarios": [
+        {
+            "id": "good-1",
+            "text": "The sun feels warm on my face.",
+            "emoji": "☀️",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "good-2",
+            "text": "This coffee smells amazing.",
+            "emoji": "☕",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "good-3",
+            "text": "That was kind of her to help me.",
+            "emoji": "🤝",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "good-4",
+            "text": "My shoulders feel a bit lighter.",
+            "emoji": "�",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "good-5",
+            "text": "A stranger smiled at me.",
+            "emoji": "😊",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "good-6",
+            "text": "My friend sent me a funny meme",
+            "emoji": "😂",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "good-7",
+            "text": "I finished a task I'd been putting off",
+            "emoji": "✅",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "good-8",
+            "text": "My favorite song came on the radio",
+            "emoji": "🎵",
+            "correctCategory": "categoryA"
+        },
+        {
+            "id": "other-1",
+            "text": "I should answer that email.",
+            "emoji": "�",
+            "correctCategory": "categoryB"
+        },
+        {
+            "id": "other-2",
+            "text": "Whatever, I need to get moving.",
+            "emoji": "🏃",
+            "correctCategory": "categoryB"
+        },
+        {
+            "id": "other-3",
+            "text": "I'm already behind today.",
+            "emoji": "⏰",
+            "correctCategory": "categoryB"
+        },
+        {
+            "id": "other-4",
+            "text": "It doesn't matter. I have too much to do.",
+            "emoji": "�",
+            "correctCategory": "categoryB"
+        },
+        {
+            "id": "other-5",
+            "text": "I saw a cloud shaped like nothing in particular",
+            "emoji": "☁️",
+            "correctCategory": "categoryB"
+        },
+        {
+            "id": "other-6",
+            "text": "My phone battery is at 47%",
+            "emoji": "🔋",
+            "correctCategory": "categoryB"
+        },
+        {
+            "id": "other-7",
+            "text": "I tied my shoelaces",
+            "emoji": "👟",
+            "correctCategory": "categoryB"
+        },
+        {
+            "id": "other-8",
+            "text": "The printer is out of paper",
+            "emoji": "🖨️",
+            "correctCategory": "categoryB"
+        }
+    ]
+}

@@ -3,13 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:worry_fear_game/domain/models/category.dart';
 import 'package:worry_fear_game/domain/models/scenario.dart';
 import 'package:worry_fear_game/presentation/widgets/scenario_card.dart';
+import '../helpers/test_helpers.dart';
 
 void main() {
   group('ScenarioCard Accessibility', () {
     final testScenario = Scenario(
       id: 'test-1',
       text: 'Test scenario',
-      correctCategory: Category.fear,
+      correctCategory: const CategoryRoleA(),
       emoji: '🔥',
     );
 
@@ -18,7 +19,12 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: ScenarioCard(scenario: testScenario, onAccepted: (_) {}),
+              child: ScenarioCard(
+                scenario: testScenario,
+                categoryA: testCategoryA,
+                categoryB: testCategoryB,
+                onAccepted: (_) {},
+              ),
             ),
           ),
         ),
@@ -33,7 +39,12 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: ScenarioCard(scenario: testScenario, onAccepted: (_) {}),
+              child: ScenarioCard(
+                scenario: testScenario,
+                categoryA: testCategoryA,
+                categoryB: testCategoryB,
+                onAccepted: (_) {},
+              ),
             ),
           ),
         ),
@@ -48,7 +59,12 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: ScenarioCard(scenario: testScenario, onAccepted: (_) {}),
+              child: ScenarioCard(
+                scenario: testScenario,
+                categoryA: testCategoryA,
+                categoryB: testCategoryB,
+                onAccepted: (_) {},
+              ),
             ),
           ),
         ),

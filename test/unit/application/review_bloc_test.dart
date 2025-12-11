@@ -7,8 +7,10 @@ import 'package:worry_fear_game/application/review/review_state.dart';
 import 'package:worry_fear_game/core/audio/audio_service.dart';
 import 'package:worry_fear_game/core/haptic/haptic_service.dart';
 import 'package:worry_fear_game/domain/models/category.dart';
+import 'package:worry_fear_game/domain/models/game_config.dart';
 import 'package:worry_fear_game/domain/models/scenario.dart';
 import 'package:worry_fear_game/domain/models/session_scenario.dart';
+import 'package:worry_fear_game/domain/services/game_config_loader.dart';
 
 // Mock services
 class MockAudioService extends Mock implements AudioService {}
@@ -16,28 +18,36 @@ class MockAudioService extends Mock implements AudioService {}
 class MockHapticService extends Mock implements HapticService {}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late MockAudioService mockAudioService;
   late MockHapticService mockHapticService;
+  late GameConfig gameConfig;
 
   // Test scenarios for review
   final testReviewScenarios = [
     SessionScenario(
-      scenario: const Scenario(
+      scenario: Scenario(
         id: 'review-1',
         text: 'Review scenario 1',
         emoji: '🎯',
-        correctCategory: Category.fear,
+        correctCategory: const CategoryRoleA(),
       ),
     ).recordAnswer(isCorrect: false), // Incorrect, needs review
     SessionScenario(
-      scenario: const Scenario(
+      scenario: Scenario(
         id: 'review-2',
         text: 'Review scenario 2',
         emoji: '🎯',
-        correctCategory: Category.worry,
+        correctCategory: const CategoryRoleB(),
       ),
     ).recordAnswer(isCorrect: false), // Incorrect, needs review
   ];
+
+  setUpAll(() async {
+    // Load config once for all tests
+    gameConfig = await GameConfigLoader.load('good-moments.json');
+  });
 
   setUp(() {
     mockAudioService = MockAudioService();
@@ -54,6 +64,7 @@ void main() {
       final bloc = ReviewBloc(
         audioService: mockAudioService,
         hapticService: mockHapticService,
+        gameConfig: gameConfig,
       );
 
       expect(bloc.state, isA<ReviewInitial>());
@@ -65,6 +76,7 @@ void main() {
       build: () => ReviewBloc(
         audioService: mockAudioService,
         hapticService: mockHapticService,
+        gameConfig: gameConfig,
       ),
       act: (bloc) => bloc.add(ReviewStarted(testReviewScenarios)),
       expect: () => [
@@ -81,10 +93,11 @@ void main() {
       build: () => ReviewBloc(
         audioService: mockAudioService,
         hapticService: mockHapticService,
+        gameConfig: gameConfig,
       ),
       seed: () => ReviewPlaying(testReviewScenarios, currentIndex: 0),
       act: (bloc) => bloc.add(
-        const AnswerAttempted(category: Category.fear), // Correct
+        AnswerAttempted(category: CategoryRole.categoryA), // Correct
       ),
       wait: const Duration(milliseconds: 1000),
       expect: () => [
@@ -105,10 +118,11 @@ void main() {
       build: () => ReviewBloc(
         audioService: mockAudioService,
         hapticService: mockHapticService,
+        gameConfig: gameConfig,
       ),
       seed: () => ReviewPlaying(testReviewScenarios, currentIndex: 0),
       act: (bloc) => bloc.add(
-        const AnswerAttempted(category: Category.worry), // Wrong
+        AnswerAttempted(category: CategoryRole.categoryB), // Wrong
       ),
       wait: const Duration(milliseconds: 1100),
       expect: () => [
@@ -130,6 +144,7 @@ void main() {
       build: () => ReviewBloc(
         audioService: mockAudioService,
         hapticService: mockHapticService,
+        gameConfig: gameConfig,
       ),
       seed: () => ReviewPlaying(
         testReviewScenarios,
@@ -137,7 +152,7 @@ void main() {
         attemptCount: 1, // Already failed once
       ),
       act: (bloc) => bloc.add(
-        const AnswerAttempted(category: Category.worry), // Wrong again
+        AnswerAttempted(category: CategoryRole.categoryB), // Wrong again
       ),
       wait: const Duration(
         milliseconds: 2600,
@@ -158,10 +173,11 @@ void main() {
       build: () => ReviewBloc(
         audioService: mockAudioService,
         hapticService: mockHapticService,
+        gameConfig: gameConfig,
       ),
       seed: () => ReviewPlaying(testReviewScenarios, currentIndex: 1),
       act: (bloc) => bloc.add(
-        const AnswerAttempted(category: Category.worry), // Correct for last
+        AnswerAttempted(category: CategoryRole.categoryB), // Correct for last
       ),
       wait: const Duration(milliseconds: 1000),
       expect: () => [isA<ReviewCorrectFeedback>(), isA<ReviewComplete>()],

@@ -15,7 +15,9 @@ void main() {
             id: 'test-$i',
             text: 'Test scenario $i',
             emoji: '🎯',
-            correctCategory: i % 2 == 0 ? Category.fear : Category.worry,
+            correctCategory: i % 2 == 0
+                ? const CategoryRoleA()
+                : const CategoryRoleB(),
           ),
         ),
       );

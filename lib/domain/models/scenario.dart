@@ -41,8 +41,8 @@ class Scenario extends Equatable {
   final String emoji;
 
   /// The correct category classification for this scenario.
-  /// Either Category.fear (immediate danger) or Category.worry (future concern).
-  final Category correctCategory;
+  /// Either CategoryRole.categoryA or CategoryRole.categoryB.
+  final CategoryRole correctCategory;
 
   /// Creates a copy of this scenario with the given fields replaced.
   ///
@@ -52,7 +52,7 @@ class Scenario extends Equatable {
     String? id,
     String? text,
     String? emoji,
-    Category? correctCategory,
+    CategoryRole? correctCategory,
   }) {
     return Scenario(
       id: id ?? this.id,

@@ -1,13 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:worry_fear_game/domain/models/category.dart';
+import 'package:worry_fear_game/domain/services/game_config_loader.dart';
 import 'package:worry_fear_game/domain/services/scenario_service.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('ScenarioService', () {
     late ScenarioService service;
 
-    setUp(() {
-      service = ScenarioService();
+    setUp(() async {
+      // Load config before creating service
+      final gameConfig = await GameConfigLoader.load('good-moments.json');
+      service = ScenarioService(gameConfig: gameConfig);
     });
 
     test('should return exactly 10 scenarios', () {
@@ -18,26 +23,26 @@ void main() {
       expect(scenarios.length, 10);
     });
 
-    test('should include at least 3 fear scenarios', () {
+    test('should include at least 3 categoryA scenarios', () {
       // Act
       final scenarios = service.getSessionScenarios();
-      final fearCount = scenarios
-          .where((s) => s.scenario.correctCategory == Category.fear)
+      final categoryACount = scenarios
+          .where((s) => s.scenario.correctCategory == CategoryRole.categoryA)
           .length;
 
       // Assert
-      expect(fearCount, greaterThanOrEqualTo(3));
+      expect(categoryACount, greaterThanOrEqualTo(3));
     });
 
-    test('should include at least 3 worry scenarios', () {
+    test('should include at least 3 categoryB scenarios', () {
       // Act
       final scenarios = service.getSessionScenarios();
-      final worryCount = scenarios
-          .where((s) => s.scenario.correctCategory == Category.worry)
+      final categoryBCount = scenarios
+          .where((s) => s.scenario.correctCategory == CategoryRole.categoryB)
           .length;
 
       // Assert
-      expect(worryCount, greaterThanOrEqualTo(3));
+      expect(categoryBCount, greaterThanOrEqualTo(3));
     });
 
     test('should not include duplicate scenarios in same session', () {

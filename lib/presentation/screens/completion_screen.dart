@@ -42,11 +42,12 @@ class CompletionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
+        child: Center(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(32),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 // Celebration emoji
                 const Text('🎉', style: TextStyle(fontSize: 80)),

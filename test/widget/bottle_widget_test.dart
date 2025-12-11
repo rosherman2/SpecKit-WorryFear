@@ -1,17 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:worry_fear_game/domain/models/category.dart';
+import 'package:worry_fear_game/domain/models/category_config.dart';
 import 'package:worry_fear_game/presentation/widgets/bottle_widget.dart';
 
 void main() {
   group('BottleWidget', () {
+    // Test category configs
+    const fearConfig = CategoryConfig(
+      id: 'fear',
+      name: 'Fear',
+      subtitle: '(Immediate)',
+      colorStart: Color(0xFFFF6B35),
+      colorEnd: Color(0xFFE63946),
+      icon: '🔥',
+      educationalText: 'Fear is immediate.',
+    );
+
+    const worryConfig = CategoryConfig(
+      id: 'worry',
+      name: 'Worry',
+      subtitle: '(Future)',
+      colorStart: Color(0xFF4A90E2),
+      colorEnd: Color(0xFF2C5F8D),
+      icon: '☁️',
+      educationalText: 'Worry is future.',
+    );
+
     testWidgets('renders fear bottle with correct icon and colors', (
       tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: BottleWidget(category: Category.fear, isGlowing: false),
+            body: BottleWidget(categoryConfig: fearConfig, isGlowing: false),
           ),
         ),
       );
@@ -26,7 +47,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: BottleWidget(category: Category.worry, isGlowing: false),
+            body: BottleWidget(categoryConfig: worryConfig, isGlowing: false),
           ),
         ),
       );
@@ -39,7 +60,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: BottleWidget(category: Category.fear, isGlowing: true),
+            body: BottleWidget(categoryConfig: fearConfig, isGlowing: true),
           ),
         ),
       );

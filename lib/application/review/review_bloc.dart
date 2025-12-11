@@ -3,6 +3,7 @@ import '../../core/audio/audio_service.dart';
 import '../../core/haptic/haptic_service.dart';
 import '../../core/utils/app_logger.dart';
 import '../../domain/models/category.dart';
+import '../../domain/models/game_config.dart';
 import 'review_event.dart';
 import 'review_state.dart';
 
@@ -16,6 +17,7 @@ import 'review_state.dart';
 /// Example:
 /// ```dart
 /// final bloc = ReviewBloc(
+///   gameConfig: config,
 ///   audioService: audioService,
 ///   hapticService: hapticService,
 /// );
@@ -23,13 +25,25 @@ import 'review_state.dart';
 /// ```
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   /// Creates a review BLoC.
-  ReviewBloc({required this.audioService, required this.hapticService})
-    : super(const ReviewInitial()) {
+  ReviewBloc({
+    required this.gameConfig,
+    required this.audioService,
+    required this.hapticService,
+  }) : super(const ReviewInitial()) {
     on<ReviewStarted>(_onReviewStarted);
     on<AnswerAttempted>(_onAnswerAttempted);
     on<AutoCorrectionComplete>(_onAutoCorrectionComplete);
     on<NextReviewItem>(_onNextReviewItem);
+
+    AppLogger.debug(
+      'ReviewBloc',
+      'constructor',
+      () => 'Initialized with config: ${gameConfig.gameId}',
+    );
   }
+
+  /// The game configuration containing educational text.
+  final GameConfig gameConfig;
 
   /// Audio service for sound effects.
   final AudioService audioService;
@@ -111,12 +125,12 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
           'ReviewBloc',
           '_onAnswerAttempted',
           () =>
-              'Auto-correction triggered for category: ${correctCategory.name}',
+              'Auto-correction triggered for category: ${correctCategory.runtimeType}',
         );
 
         emit(
           ReviewAutoCorrection(
-            correctCategory: correctCategory.toString().split('.').last,
+            correctCategory: correctCategory.runtimeType.toString(),
             educationalText: educationalText,
           ),
         );
@@ -177,13 +191,16 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     }
   }
 
-  /// Gets educational text for a category.
-  String _getEducationalText(Category category) {
-    switch (category) {
-      case Category.fear:
-        return 'Fear is about immediate danger or threats happening right now.';
-      case Category.worry:
-        return 'Worry is about future possibilities and "what-if" scenarios.';
-    }
+  /// Gets educational text for a category from the game config.
+  ///
+  /// Maps CategoryRole to the corresponding CategoryConfig's educational text.
+  String _getEducationalText(CategoryRole categoryRole) {
+    final categoryConfig = gameConfig.getCategory(categoryRole);
+    AppLogger.debug(
+      'ReviewBloc',
+      '_getEducationalText',
+      () => 'Getting educational text for ${categoryConfig.id}',
+    );
+    return categoryConfig.educationalText;
   }
 }

@@ -37,14 +37,14 @@ final class ReviewStarted extends ReviewEvent {
 ///
 /// Example:
 /// ```dart
-/// bloc.add(AnswerAttempted(category: Category.fear));
+/// bloc.add(AnswerAttempted(category: CategoryRole.categoryA));
 /// ```
 final class AnswerAttempted extends ReviewEvent {
   /// Creates an answer attempted event.
   const AnswerAttempted({required this.category});
 
-  /// The category the user selected (Fear or Worry).
-  final Category category;
+  /// The category role the user selected.
+  final CategoryRole category;
 
   @override
   List<Object?> get props => [category];

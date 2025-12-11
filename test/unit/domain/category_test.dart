@@ -2,32 +2,58 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:worry_fear_game/domain/models/category.dart';
 
 void main() {
-  group('Category', () {
-    test('should have fear and worry values', () {
+  group('CategoryRole', () {
+    test('should have categoryA and categoryB constants', () {
       // Arrange & Act
-      final values = Category.values;
+      final roleA = CategoryRole.categoryA;
+      final roleB = CategoryRole.categoryB;
 
       // Assert
-      expect(values, contains(Category.fear));
-      expect(values, contains(Category.worry));
-      expect(values.length, 2);
-    });
-
-    test('should have correct string representation', () {
-      // Arrange & Act & Assert
-      expect(Category.fear.toString(), 'Category.fear');
-      expect(Category.worry.toString(), 'Category.worry');
+      expect(roleA, isA<CategoryRoleA>());
+      expect(roleB, isA<CategoryRoleB>());
     });
 
     test('should be comparable for equality', () {
       // Arrange
-      const category1 = Category.fear;
-      const category2 = Category.fear;
-      const category3 = Category.worry;
+      const role1 = CategoryRole.categoryA;
+      const role2 = CategoryRole.categoryA;
+      const role3 = CategoryRole.categoryB;
 
       // Act & Assert
-      expect(category1, equals(category2));
-      expect(category1, isNot(equals(category3)));
+      expect(role1, equals(role2));
+      expect(role1, isNot(equals(role3)));
+    });
+
+    test('should parse from string correctly', () {
+      // Arrange & Act
+      final roleA = CategoryRole.fromString('categoryA');
+      final roleB = CategoryRole.fromString('categoryB');
+
+      // Assert
+      expect(roleA, equals(CategoryRole.categoryA));
+      expect(roleB, equals(CategoryRole.categoryB));
+    });
+
+    test('should throw ArgumentError for invalid string', () {
+      // Arrange & Act & Assert
+      expect(
+        () => CategoryRole.fromString('invalid'),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('should support exhaustive pattern matching', () {
+      // Arrange - test both cases
+      String getCategoryLabel(CategoryRole role) {
+        return switch (role) {
+          CategoryRoleA() => 'A',
+          CategoryRoleB() => 'B',
+        };
+      }
+
+      // Act & Assert
+      expect(getCategoryLabel(CategoryRole.categoryA), 'A');
+      expect(getCategoryLabel(CategoryRole.categoryB), 'B');
     });
   });
 }

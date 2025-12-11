@@ -2,32 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:worry_fear_game/domain/models/category.dart';
 import 'package:worry_fear_game/presentation/widgets/accessibility_buttons.dart';
+import '../helpers/test_helpers.dart';
 
 void main() {
   group('AccessibilityButtons', () {
-    testWidgets('displays Fear and Worry buttons', (tester) async {
+    testWidgets('displays category buttons from config', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: AccessibilityButtons(onCategorySelected: (_) {}),
+            body: AccessibilityButtons(
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
+              onCategorySelected: (_) {},
+            ),
           ),
         ),
       );
 
-      // Should show both buttons
-      expect(find.text('Fear'), findsOneWidget);
-      expect(find.text('Worry'), findsOneWidget);
+      // Should show both buttons with config names
+      expect(find.text('Category A'), findsOneWidget);
+      expect(find.text('Category B'), findsOneWidget);
     });
 
-    testWidgets('Fear button calls callback with Category.fear', (
+    testWidgets('CategoryA button calls callback with CategoryRole.categoryA', (
       tester,
     ) async {
-      Category? selectedCategory;
+      CategoryRole? selectedCategory;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AccessibilityButtons(
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
               onCategorySelected: (category) {
                 selectedCategory = category;
               },
@@ -36,22 +43,24 @@ void main() {
         ),
       );
 
-      // Tap Fear button
-      await tester.tap(find.text('Fear'));
+      // Tap Category A button
+      await tester.tap(find.text('Category A'));
       await tester.pump();
 
-      expect(selectedCategory, Category.fear);
+      expect(selectedCategory, isA<CategoryRoleA>());
     });
 
-    testWidgets('Worry button calls callback with Category.worry', (
+    testWidgets('CategoryB button calls callback with CategoryRole.categoryB', (
       tester,
     ) async {
-      Category? selectedCategory;
+      CategoryRole? selectedCategory;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AccessibilityButtons(
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
               onCategorySelected: (category) {
                 selectedCategory = category;
               },
@@ -60,25 +69,29 @@ void main() {
         ),
       );
 
-      // Tap Worry button
-      await tester.tap(find.text('Worry'));
+      // Tap Category B button
+      await tester.tap(find.text('Category B'));
       await tester.pump();
 
-      expect(selectedCategory, Category.worry);
+      expect(selectedCategory, isA<CategoryRoleB>());
     });
 
-    testWidgets('buttons have correct colors', (tester) async {
+    testWidgets('buttons have correct colors from config', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: AccessibilityButtons(onCategorySelected: (_) {}),
+            body: AccessibilityButtons(
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
+              onCategorySelected: (_) {},
+            ),
           ),
         ),
       );
 
       // Find buttons by text
-      expect(find.text('Fear'), findsOneWidget);
-      expect(find.text('Worry'), findsOneWidget);
+      expect(find.text('Category A'), findsOneWidget);
+      expect(find.text('Category B'), findsOneWidget);
 
       // Buttons should be ElevatedButtons
       expect(find.byType(ElevatedButton), findsNWidgets(2));
@@ -88,7 +101,11 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: AccessibilityButtons(onCategorySelected: (_) {}),
+            body: AccessibilityButtons(
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
+              onCategorySelected: (_) {},
+            ),
           ),
         ),
       );

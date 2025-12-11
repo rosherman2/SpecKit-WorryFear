@@ -1,32 +1,35 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/app_colors.dart';
-import '../../domain/models/category.dart';
+import '../../core/utils/app_logger.dart';
+import '../../domain/models/game_config.dart';
 import '../../domain/services/onboarding_service.dart';
 import '../animations/floating_animation.dart';
 import '../widgets/bottle_widget.dart';
 import '../widgets/expandable_section.dart';
 
 /// [StatefulWidget] Intro screen with educational text and start button.
-/// Purpose: First screen users see, explains worry vs fear distinction.
+/// Purpose: First screen users see, explains the game concept.
 /// Navigation: Default route, navigates to gameplay on Start button tap.
 ///
-/// Displays:
-/// - Educational text about worry vs fear
-/// - Two 3D bottles (Fear and Worry)
+/// Now fully config-driven - displays content from GameConfig:
+/// - Title from config.intro.title
+/// - Educational text from config.intro.educationalText
+/// - Two 3D bottles (categoryA and categoryB)
 /// - Start button to begin game
-/// - Expandable Scientific Background (future implementation)
+/// - Expandable Scientific Background from config
 ///
 /// Example:
 /// ```dart
-/// Navigator.push(
-///   context,
-///   MaterialPageRoute(builder: (_) => const IntroScreen()),
-/// );
+/// IntroScreen(gameConfig: loadedConfig)
 /// ```
 class IntroScreen extends StatefulWidget {
-  /// Creates the intro screen.
-  const IntroScreen({super.key});
+  /// Creates the intro screen with game configuration.
+  const IntroScreen({required this.gameConfig, super.key});
+
+  /// The game configuration containing intro content.
+  final GameConfig gameConfig;
 
   @override
   State<IntroScreen> createState() => _IntroScreenState();
@@ -35,6 +38,14 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
+    AppLogger.debug(
+      'IntroScreen',
+      'build',
+      () => 'Building intro screen for: ${widget.gameConfig.gameId}',
+    );
+
+    final intro = widget.gameConfig.intro;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -44,10 +55,10 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Educational text (FR-001 to FR-003)
-                const Text(
-                  'Worry vs Fear',
-                  style: TextStyle(
+                // Title from config
+                Text(
+                  intro.title,
+                  style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -55,30 +66,40 @@ class _IntroScreenState extends State<IntroScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Worry imagines future what-ifs, while fear reacts to an immediate, present danger. Knowing which one you feel helps you choose the right response and calm faster.',
-                  style: TextStyle(fontSize: 18, color: AppColors.textPrimary),
-                  textAlign: TextAlign.center,
+
+                // Educational text from config
+                ...intro.educationalText.map(
+                  (text) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      text,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: AppColors.textPrimary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 48),
 
-                // Bottles (FR-007 to FR-010)
-                const Row(
+                // Bottles from config
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
+                  children: [
                     FloatingAnimation(
-                      duration: Duration(milliseconds: 2000),
+                      duration: const Duration(milliseconds: 2000),
                       offset: 6.0,
-                      child: const BottleWidget(
-                        category: Category.fear,
+                      child: BottleWidget(
+                        categoryConfig: widget.gameConfig.categoryA,
                         isGlowing: false,
                       ),
                     ),
                     FloatingAnimation(
-                      duration: Duration(milliseconds: 2300),
+                      duration: const Duration(milliseconds: 2300),
                       offset: 6.0,
-                      child: const BottleWidget(
-                        category: Category.worry,
+                      child: BottleWidget(
+                        categoryConfig: widget.gameConfig.categoryB,
                         isGlowing: false,
                       ),
                     ),
@@ -111,18 +132,12 @@ class _IntroScreenState extends State<IntroScreen> {
 
                 const SizedBox(height: 32),
 
-                // Expandable Scientific Background (FR-012 to FR-015)
-                const ExpandableSection(
-                  title: 'Scientific Background',
+                // Expandable Scientific Background from config
+                ExpandableSection(
+                  title: intro.scientificTitle,
                   content: Text(
-                    'Fear and worry are distinct emotional responses:\n\n'
-                    '• Fear activates when facing immediate danger, triggering '
-                    'the fight-or-flight response to protect you now.\n\n'
-                    '• Worry focuses on uncertain future events, often leading '
-                    'to rumination about "what if" scenarios.\n\n'
-                    'Understanding the difference helps you choose appropriate '
-                    'coping strategies: action for fear, planning for worry.',
-                    style: TextStyle(
+                    intro.scientificContent,
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textPrimary,
                       height: 1.5,
@@ -132,31 +147,32 @@ class _IntroScreenState extends State<IntroScreen> {
 
                 const SizedBox(height: 24),
 
-                // DEBUG: Reset onboarding button
-                TextButton(
-                  onPressed: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    final service = OnboardingService(prefs);
-                    await service.reset();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Onboarding reset! Restart the game to see hints.',
+                // DEBUG: Reset onboarding button (only visible in debug mode)
+                if (kDebugMode)
+                  TextButton(
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      final service = OnboardingService(prefs);
+                      await service.reset();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Onboarding reset! Restart the game to see hints.',
+                            ),
+                            backgroundColor: AppColors.gold,
                           ),
-                          backgroundColor: AppColors.gold,
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    '🔄 Reset Onboarding (Debug)',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
+                        );
+                      }
+                    },
+                    child: const Text(
+                      '🔄 Reset Onboarding (Debug)',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

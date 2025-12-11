@@ -3,21 +3,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:worry_fear_game/domain/models/category.dart';
 import 'package:worry_fear_game/domain/models/scenario.dart';
 import 'package:worry_fear_game/presentation/widgets/scenario_card.dart';
+import '../helpers/test_helpers.dart';
 
 void main() {
   group('ScenarioCard', () {
-    const testScenario = Scenario(
+    final testScenario = Scenario(
       id: 'test-1',
       text: 'A car just swerved toward me',
       emoji: '🚗',
-      correctCategory: Category.fear,
+      correctCategory: const CategoryRoleA(),
     );
 
     testWidgets('displays emoji and text correctly', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ScenarioCard(scenario: testScenario, onAccepted: (_) {}),
+            body: ScenarioCard(
+              scenario: testScenario,
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
+              onAccepted: (_) {},
+            ),
           ),
         ),
       );
@@ -30,7 +36,12 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ScenarioCard(scenario: testScenario, onAccepted: (_) {}),
+            body: ScenarioCard(
+              scenario: testScenario,
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
+              onAccepted: (_) {},
+            ),
           ),
         ),
       );
@@ -43,7 +54,12 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ScenarioCard(scenario: testScenario, onAccepted: (_) {}),
+            body: ScenarioCard(
+              scenario: testScenario,
+              categoryA: testCategoryA,
+              categoryB: testCategoryB,
+              onAccepted: (_) {},
+            ),
           ),
         ),
       );

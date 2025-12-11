@@ -6,41 +6,41 @@ void main() {
   group('Scenario', () {
     test('should create scenario with all required fields', () {
       // Arrange & Act
-      const scenario = Scenario(
+      final scenario = Scenario(
         id: 'fear-1',
         text: 'A car just swerved toward me',
         emoji: '🚗',
-        correctCategory: Category.fear,
+        correctCategory: const CategoryRoleA(),
       );
 
       // Assert
       expect(scenario.id, 'fear-1');
       expect(scenario.text, 'A car just swerved toward me');
       expect(scenario.emoji, '🚗');
-      expect(scenario.correctCategory, Category.fear);
+      expect(scenario.correctCategory, isA<CategoryRoleA>());
     });
 
     test('should support equality comparison with Equatable', () {
       // Arrange
-      const scenario1 = Scenario(
+      final scenario1 = Scenario(
         id: 'fear-1',
         text: 'A car just swerved toward me',
         emoji: '🚗',
-        correctCategory: Category.fear,
+        correctCategory: const CategoryRoleA(),
       );
 
-      const scenario2 = Scenario(
+      final scenario2 = Scenario(
         id: 'fear-1',
         text: 'A car just swerved toward me',
         emoji: '🚗',
-        correctCategory: Category.fear,
+        correctCategory: const CategoryRoleA(),
       );
 
-      const scenario3 = Scenario(
+      final scenario3 = Scenario(
         id: 'worry-1',
         text: 'Different text',
         emoji: '💔',
-        correctCategory: Category.worry,
+        correctCategory: const CategoryRoleB(),
       );
 
       // Act & Assert
@@ -50,11 +50,11 @@ void main() {
 
     test('should support copyWith for immutability', () {
       // Arrange
-      const original = Scenario(
+      final original = Scenario(
         id: 'fear-1',
         text: 'Original text',
         emoji: '🚗',
-        correctCategory: Category.fear,
+        correctCategory: const CategoryRoleA(),
       );
 
       // Act
@@ -70,22 +70,36 @@ void main() {
 
     test('should include all fields in props for equality', () {
       // Arrange
-      const scenario1 = Scenario(
+      final scenario1 = Scenario(
         id: 'fear-1',
         text: 'Text',
         emoji: '🚗',
-        correctCategory: Category.fear,
+        correctCategory: const CategoryRoleA(),
       );
 
-      const scenario2 = Scenario(
+      final scenario2 = Scenario(
         id: 'fear-2', // Different ID
         text: 'Text',
         emoji: '🚗',
-        correctCategory: Category.fear,
+        correctCategory: const CategoryRoleA(),
       );
 
       // Act & Assert
       expect(scenario1, isNot(equals(scenario2)));
+    });
+
+    test('should work with CategoryRoleB', () {
+      // Arrange & Act
+      final scenario = Scenario(
+        id: 'worry-1',
+        text: 'Worrying about future',
+        emoji: '😰',
+        correctCategory: const CategoryRoleB(),
+      );
+
+      // Assert
+      expect(scenario.correctCategory, isA<CategoryRoleB>());
+      expect(scenario.correctCategory, equals(CategoryRole.categoryB));
     });
   });
 }

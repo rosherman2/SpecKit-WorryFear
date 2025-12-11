@@ -1,0 +1,129 @@
+{
+  "gameId": "worry-vs-fear",
+  "version": "1.0",
+  "intro": {
+    "title": "Worry vs Fear",
+    "educationalText": [
+      "Worry imagines future what-ifs, while fear reacts to an immediate, present danger.",
+      "Knowing which one you feel helps you choose the right response and calm faster."
+    ],
+    "scientificTitle": "📚 Scientific Background",
+    "scientificContent": "Fear and worry are distinct emotional responses:\n\n• Fear activates when facing immediate danger, triggering the fight-or-flight response to protect you now.\n\n• Worry focuses on uncertain future events, often leading to rumination about \"what if\" scenarios.\n\nUnderstanding the difference helps you choose appropriate coping strategies: action for fear, planning for worry."
+  },
+  "categoryA": {
+    "id": "fear",
+    "name": "Fear",
+    "subtitle": "(Immediate)",
+    "colorStart": "#FF6B35",
+    "colorEnd": "#E63946",
+    "icon": "🔥",
+    "educationalText": "Fear is about immediate danger or threats happening right now."
+  },
+  "categoryB": {
+    "id": "worry",
+    "name": "Worry",
+    "subtitle": "(Future)",
+    "colorStart": "#4A90E2",
+    "colorEnd": "#2C5F8D",
+    "icon": "☁️",
+    "educationalText": "Worry is about future possibilities and \"what-if\" scenarios."
+  },
+  "scenarios": [
+    {
+      "id": "worry-1",
+      "text": "Thinking \"what if I never find a partner?\"",
+      "emoji": "💔",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "worry-2",
+      "text": "I might lose my job next month",
+      "emoji": "💼",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "worry-3",
+      "text": "The exam tomorrow could go terribly",
+      "emoji": "📝",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "worry-4",
+      "text": "My savings might not last",
+      "emoji": "💰",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "worry-5",
+      "text": "My child could get sick during the trip",
+      "emoji": "🤒",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "worry-6",
+      "text": "There's a chance the flight will be cancelled",
+      "emoji": "✈️",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "worry-7",
+      "text": "I'm afraid I'll say something dumb in the meeting",
+      "emoji": "😰",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "worry-8",
+      "text": "I'm worried home prices will drop before I buy",
+      "emoji": "🏠",
+      "correctCategory": "categoryB"
+    },
+    {
+      "id": "fear-1",
+      "text": "A car just swerved toward me",
+      "emoji": "🚗",
+      "correctCategory": "categoryA"
+    },
+    {
+      "id": "fear-2",
+      "text": "A dog is growling right next to my leg",
+      "emoji": "🐕",
+      "correctCategory": "categoryA"
+    },
+    {
+      "id": "fear-3",
+      "text": "I smell gas in the room",
+      "emoji": "⚠️",
+      "correctCategory": "categoryA"
+    },
+    {
+      "id": "fear-4",
+      "text": "I hear footsteps behind me in the dark",
+      "emoji": "👣",
+      "correctCategory": "categoryA"
+    },
+    {
+      "id": "fear-5",
+      "text": "There's smoke filling the room",
+      "emoji": "💨",
+      "correctCategory": "categoryA"
+    },
+    {
+      "id": "fear-6",
+      "text": "A loud bang just happened outside my window",
+      "emoji": "💥",
+      "correctCategory": "categoryA"
+    },
+    {
+      "id": "fear-7",
+      "text": "The elevator suddenly dropped",
+      "emoji": "🛗",
+      "correctCategory": "categoryA"
+    },
+    {
+      "id": "fear-8",
+      "text": "I just slipped at the edge of a cliff",
+      "emoji": "⛰️",
+      "correctCategory": "categoryA"
+    }
+  ]
+}

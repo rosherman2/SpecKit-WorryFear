@@ -6,7 +6,10 @@ import '../../application/review/review_state.dart';
 import '../../core/audio/audio_service_impl.dart';
 import '../../core/haptic/haptic_service_impl.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/app_logger.dart';
 import '../../domain/models/category.dart';
+import '../../domain/models/category_config.dart';
+import '../../domain/models/game_config.dart';
 import '../../domain/models/scenario.dart';
 import '../../domain/models/session_scenario.dart';
 import '../animations/floating_animation.dart';
@@ -17,30 +20,37 @@ import '../widgets/success_animation.dart';
 /// [StatefulWidget] Review screen for incorrect scenarios.
 /// Purpose: Allows users to retry scenarios they got wrong with auto-correction.
 ///
+/// Now fully config-driven - uses GameConfig for:
+/// - Educational text during auto-correction (from ReviewBloc)
+/// - Bottle rendering with categoryA/categoryB configs
+///
 /// Features:
 /// - Shows review progress (e.g., "Reviewing 1 of 2")
 /// - Reuses ScenarioCard and BottleWidget from main gameplay
 /// - Tracks attempts (2 max before auto-correction)
-/// - Shows educational text during auto-correction
+/// - Shows config-driven educational text during auto-correction
 /// - Returns to main flow when complete
 ///
 /// Example:
 /// ```dart
-/// Navigator.push(
-///   context,
-///   MaterialPageRoute(
-///     builder: (_) => ReviewScreen(
-///       reviewScenarios: session.incorrectScenarios,
-///     ),
-///   ),
-/// );
+/// ReviewScreen(
+///   reviewScenarios: session.incorrectScenarios,
+///   gameConfig: loadedConfig,
+/// )
 /// ```
 class ReviewScreen extends StatefulWidget {
   /// Creates a review screen.
-  const ReviewScreen({required this.reviewScenarios, super.key});
+  const ReviewScreen({
+    required this.reviewScenarios,
+    required this.gameConfig,
+    super.key,
+  });
 
   /// Scenarios that need review (were answered incorrectly).
   final List<SessionScenario> reviewScenarios;
+
+  /// The game configuration.
+  final GameConfig gameConfig;
 
   @override
   State<ReviewScreen> createState() => _ReviewScreenState();
@@ -52,7 +62,16 @@ class _ReviewScreenState extends State<ReviewScreen> {
   @override
   void initState() {
     super.initState();
+
+    AppLogger.debug(
+      'ReviewScreen',
+      'initState',
+      () =>
+          'Initializing review for ${widget.reviewScenarios.length} scenarios',
+    );
+
     _bloc = ReviewBloc(
+      gameConfig: widget.gameConfig,
       audioService: AudioServiceImpl(),
       hapticService: HapticServiceImpl(),
     );
@@ -164,6 +183,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
           // Scenario Card
           ScenarioCard(
             scenario: currentScenario.scenario,
+            categoryA: widget.gameConfig.categoryA,
+            categoryB: widget.gameConfig.categoryB,
             onAccepted: (_) {}, // Not used, handled by DragTarget
             showError: state.attemptCount > 0,
           ),
@@ -176,9 +197,17 @@ class _ReviewScreenState extends State<ReviewScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildDragTarget(Category.fear, state),
+                _buildDragTarget(
+                  CategoryRole.categoryA,
+                  widget.gameConfig.categoryA,
+                  state,
+                ),
                 const SizedBox(width: 32),
-                _buildDragTarget(Category.worry, state),
+                _buildDragTarget(
+                  CategoryRole.categoryB,
+                  widget.gameConfig.categoryB,
+                  state,
+                ),
               ],
             ),
           ),
@@ -187,19 +216,27 @@ class _ReviewScreenState extends State<ReviewScreen> {
     );
   }
 
-  Widget _buildDragTarget(Category category, ReviewPlaying state) {
+  Widget _buildDragTarget(
+    CategoryRole categoryRole,
+    CategoryConfig categoryConfig,
+    ReviewPlaying state,
+  ) {
     return DragTarget<Scenario>(
       onWillAcceptWithDetails: (details) => true,
       onAcceptWithDetails: (details) {
-        _bloc.add(AnswerAttempted(category: category));
+        _bloc.add(AnswerAttempted(category: categoryRole));
       },
       builder: (context, candidateData, rejectedData) {
         final isHovering = candidateData.isNotEmpty;
         return FloatingAnimation(
-          duration: category == Category.fear
+          duration: categoryRole is CategoryRoleA
               ? const Duration(milliseconds: 2000)
               : const Duration(milliseconds: 2300),
-          child: BottleWidget(category: category, isGlowing: isHovering),
+          offset: 6.0,
+          child: BottleWidget(
+            categoryConfig: categoryConfig,
+            isGlowing: isHovering,
+          ),
         );
       },
     );

@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../domain/models/category.dart';
+import '../../domain/models/category_config.dart';
 import '../../domain/models/scenario.dart';
 import 'accessibility_buttons.dart';
 
 /// [StatefulWidget] Draggable scenario card with emoji and text.
 /// Purpose: Interactive card that user drags to bottles to classify scenarios.
 ///
+/// Now config-driven - requires CategoryConfig for accessibility buttons.
+///
 /// Features:
 /// - Displays scenario emoji and text
 /// - Draggable with custom feedback widget
 /// - Shows error state with red border and shake animation
 /// - Lifts on drag start with smooth animation
+/// - Double-tap for accessibility buttons
 ///
 /// Example:
 /// ```dart
 /// ScenarioCard(
 ///   scenario: myScenario,
-///   onAccepted: (category) {
+///   categoryA: gameConfig.categoryA,
+///   categoryB: gameConfig.categoryB,
+///   onAccepted: (categoryRole) {
 ///     // Handle drop on bottle
 ///   },
 ///   showError: false,
@@ -27,6 +33,8 @@ class ScenarioCard extends StatefulWidget {
   /// Creates a scenario card.
   const ScenarioCard({
     required this.scenario,
+    required this.categoryA,
+    required this.categoryB,
     required this.onAccepted,
     this.showError = false,
     super.key,
@@ -35,8 +43,14 @@ class ScenarioCard extends StatefulWidget {
   /// The scenario to display.
   final Scenario scenario;
 
+  /// Config for category A (for accessibility buttons).
+  final CategoryConfig categoryA;
+
+  /// Config for category B (for accessibility buttons).
+  final CategoryConfig categoryB;
+
   /// Callback when card is dropped on a bottle.
-  final void Function(Category category) onAccepted;
+  final void Function(CategoryRole categoryRole) onAccepted;
 
   /// Whether to show error state (red border, shake).
   final bool showError;
@@ -156,9 +170,11 @@ class _ScenarioCardState extends State<ScenarioCard>
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: AccessibilityButtons(
-                      onCategorySelected: (category) {
+                      categoryA: widget.categoryA,
+                      categoryB: widget.categoryB,
+                      onCategorySelected: (categoryRole) {
                         setState(() => _showAccessibilityButtons = false);
-                        widget.onAccepted(category);
+                        widget.onAccepted(categoryRole);
                       },
                     ),
                   ),

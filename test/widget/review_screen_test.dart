@@ -6,6 +6,7 @@ import 'package:worry_fear_game/domain/models/session_scenario.dart';
 import 'package:worry_fear_game/presentation/screens/review_screen.dart';
 import 'package:worry_fear_game/presentation/widgets/bottle_widget.dart';
 import 'package:worry_fear_game/presentation/widgets/scenario_card.dart';
+import '../helpers/test_helpers.dart';
 
 void main() {
   group('ReviewScreen', () {
@@ -14,19 +15,19 @@ void main() {
     setUp(() {
       testReviewScenarios = [
         SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: 'r1',
             text: 'Review test 1',
             emoji: '🎯',
-            correctCategory: Category.fear,
+            correctCategory: const CategoryRoleA(),
           ),
         ).recordAnswer(isCorrect: false),
         SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: 'r2',
             text: 'Review test 2',
             emoji: '🎯',
-            correctCategory: Category.worry,
+            correctCategory: const CategoryRoleB(),
           ),
         ).recordAnswer(isCorrect: false),
       ];
@@ -34,7 +35,12 @@ void main() {
 
     testWidgets('displays review header text', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: ReviewScreen(reviewScenarios: testReviewScenarios)),
+        MaterialApp(
+          home: ReviewScreen(
+            reviewScenarios: testReviewScenarios,
+            gameConfig: testGameConfig,
+          ),
+        ),
       );
       await tester.pump();
 
@@ -43,7 +49,12 @@ void main() {
 
     testWidgets('displays review progress indicator', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: ReviewScreen(reviewScenarios: testReviewScenarios)),
+        MaterialApp(
+          home: ReviewScreen(
+            reviewScenarios: testReviewScenarios,
+            gameConfig: testGameConfig,
+          ),
+        ),
       );
       await tester.pump();
 
@@ -54,37 +65,54 @@ void main() {
 
     testWidgets('displays scenario card', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: ReviewScreen(reviewScenarios: testReviewScenarios)),
+        MaterialApp(
+          home: ReviewScreen(
+            reviewScenarios: testReviewScenarios,
+            gameConfig: testGameConfig,
+          ),
+        ),
       );
       await tester.pump();
 
       expect(find.byType(ScenarioCard), findsOneWidget);
     });
 
-    testWidgets('displays Fear and Worry bottles', (tester) async {
+    testWidgets('displays category bottles from config', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: ReviewScreen(reviewScenarios: testReviewScenarios)),
+        MaterialApp(
+          home: ReviewScreen(
+            reviewScenarios: testReviewScenarios,
+            gameConfig: testGameConfig,
+          ),
+        ),
       );
       await tester.pump();
 
       expect(find.byType(BottleWidget), findsNWidgets(2));
     });
 
-    testWidgets('displays educational text during auto-correction', (
-      tester,
-    ) async {
+    testWidgets('initially no educational text visible', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: ReviewScreen(reviewScenarios: testReviewScenarios)),
+        MaterialApp(
+          home: ReviewScreen(
+            reviewScenarios: testReviewScenarios,
+            gameConfig: testGameConfig,
+          ),
+        ),
       );
 
       // Initially no educational text
-      expect(find.textContaining('Fear is about'), findsNothing);
-      expect(find.textContaining('Worry is about'), findsNothing);
+      expect(find.textContaining('test educational text'), findsNothing);
     });
 
     testWidgets('shows attempt indicator', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: ReviewScreen(reviewScenarios: testReviewScenarios)),
+        MaterialApp(
+          home: ReviewScreen(
+            reviewScenarios: testReviewScenarios,
+            gameConfig: testGameConfig,
+          ),
+        ),
       );
       await tester.pump();
 

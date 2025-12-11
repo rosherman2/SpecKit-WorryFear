@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:worry_fear_game/application/gameplay/gameplay_bloc.dart';
 import 'package:worry_fear_game/application/gameplay/gameplay_event.dart';
@@ -9,22 +8,31 @@ import 'package:worry_fear_game/application/review/review_state.dart';
 import 'package:worry_fear_game/core/audio/audio_service.dart';
 import 'package:worry_fear_game/core/haptic/haptic_service.dart';
 import 'package:worry_fear_game/domain/models/category.dart';
+import 'package:worry_fear_game/domain/models/game_config.dart';
 import 'package:worry_fear_game/domain/models/scenario.dart';
 import 'package:worry_fear_game/domain/models/session_scenario.dart';
+import 'package:worry_fear_game/domain/services/game_config_loader.dart';
 import 'package:worry_fear_game/domain/services/scenario_service.dart';
 
 /// Integration tests covering all 4 user stories end-to-end
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('Full Experience Integration Tests', () {
     late GameplayBloc gameplayBloc;
     late MockAudioService mockAudioService;
     late MockHapticService mockHapticService;
     late ScenarioService scenarioService;
+    late GameConfig gameConfig;
+
+    setUpAll(() async {
+      gameConfig = await GameConfigLoader.load('good-moments.json');
+    });
 
     setUp(() {
       mockAudioService = MockAudioService();
       mockHapticService = MockHapticService();
-      scenarioService = ScenarioService();
+      scenarioService = ScenarioService(gameConfig: gameConfig);
       gameplayBloc = GameplayBloc(
         scenarioService: scenarioService,
         audioService: mockAudioService,
@@ -77,9 +85,9 @@ void main() {
         final playingState = gameplayBloc.state as GameplayPlaying;
         final currentScenario = playingState.currentScenario;
         final wrongCategory =
-            currentScenario.scenario.correctCategory == Category.fear
-            ? Category.worry
-            : Category.fear;
+            currentScenario.scenario.correctCategory is CategoryRoleA
+            ? CategoryRole.categoryB
+            : CategoryRole.categoryA;
 
         // Drop on wrong bottle
         gameplayBloc.add(DroppedOnBottle(category: wrongCategory));
@@ -102,6 +110,7 @@ void main() {
         reviewBloc = ReviewBloc(
           audioService: mockAudioService,
           hapticService: mockHapticService,
+          gameConfig: gameConfig,
         );
       });
 
@@ -111,12 +120,12 @@ void main() {
 
       test('review mode starts with provided scenarios', () async {
         final reviewScenarios = [
-          const SessionScenario(
+          SessionScenario(
             scenario: Scenario(
               id: 'test-1',
               text: 'Test scenario',
               emoji: '🔥',
-              correctCategory: Category.fear,
+              correctCategory: const CategoryRoleA(),
             ),
           ),
         ];
@@ -129,20 +138,20 @@ void main() {
 
       test('correct answer in review advances to next', () async {
         final reviewScenarios = [
-          const SessionScenario(
+          SessionScenario(
             scenario: Scenario(
               id: 'test-1',
               text: 'Test scenario 1',
               emoji: '🔥',
-              correctCategory: Category.fear,
+              correctCategory: const CategoryRoleA(),
             ),
           ),
-          const SessionScenario(
+          SessionScenario(
             scenario: Scenario(
               id: 'test-2',
               text: 'Test scenario 2',
               emoji: '☁️',
-              correctCategory: Category.worry,
+              correctCategory: const CategoryRoleB(),
             ),
           ),
         ];
@@ -151,7 +160,7 @@ void main() {
         await Future.delayed(const Duration(milliseconds: 100));
 
         // Answer first one correctly
-        reviewBloc.add(const AnswerAttempted(category: Category.fear));
+        reviewBloc.add(AnswerAttempted(category: CategoryRole.categoryA));
         await Future.delayed(const Duration(milliseconds: 1000));
 
         // Should advance to next or show feedback
@@ -168,18 +177,18 @@ void main() {
       test('scenario service provides balanced scenarios', () {
         final scenarios = scenarioService.getSessionScenarios();
 
-        // Count fear and worry scenarios
-        final fearCount = scenarios
-            .where((s) => s.scenario.correctCategory == Category.fear)
+        // Count categoryA and categoryB scenarios
+        final categoryACount = scenarios
+            .where((s) => s.scenario.correctCategory is CategoryRoleA)
             .length;
-        final worryCount = scenarios
-            .where((s) => s.scenario.correctCategory == Category.worry)
+        final categoryBCount = scenarios
+            .where((s) => s.scenario.correctCategory is CategoryRoleB)
             .length;
 
         // Should have at least 3 of each
-        expect(fearCount, greaterThanOrEqualTo(3));
-        expect(worryCount, greaterThanOrEqualTo(3));
-        expect(fearCount + worryCount, 10);
+        expect(categoryACount, greaterThanOrEqualTo(3));
+        expect(categoryBCount, greaterThanOrEqualTo(3));
+        expect(categoryACount + categoryBCount, 10);
       });
     });
 
@@ -195,7 +204,7 @@ void main() {
           // Each scenario should have valid category for button selection
           expect(
             scenario.scenario.correctCategory,
-            anyOf(Category.fear, Category.worry),
+            anyOf(isA<CategoryRoleA>(), isA<CategoryRoleB>()),
           );
           // Each scenario should have text for screen readers
           expect(scenario.scenario.text.isNotEmpty, true);

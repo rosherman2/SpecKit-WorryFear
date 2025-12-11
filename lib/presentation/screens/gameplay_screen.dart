@@ -9,6 +9,8 @@ import '../../core/haptic/haptic_service_impl.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/app_logger.dart';
 import '../../domain/models/category.dart';
+import '../../domain/models/category_config.dart';
+import '../../domain/models/game_config.dart';
 import '../../domain/models/scenario.dart';
 import '../../domain/services/onboarding_service.dart';
 import '../../domain/services/scenario_service.dart';
@@ -26,19 +28,26 @@ import 'completion_screen.dart';
 /// Purpose: Core game loop where users classify scenarios.
 /// Navigation: Accessed from IntroScreen via Start button.
 ///
+/// Now fully config-driven - uses GameConfig for:
+/// - Scenario loading via ScenarioService
+/// - Bottle rendering with categoryA/categoryB configs
+///
 /// Displays:
 /// - Progress bar showing session progress
 /// - Scenario card (draggable)
-/// - Two bottle drop zones (Fear and Worry)
+/// - Two bottle drop zones (config-driven categories)
 /// - Feedback animations for correct/incorrect answers
 ///
 /// Example:
 /// ```dart
-/// Navigator.pushNamed(context, '/gameplay');
+/// GameplayScreen(gameConfig: loadedConfig)
 /// ```
 class GameplayScreen extends StatefulWidget {
-  /// Creates the gameplay screen.
-  const GameplayScreen({super.key});
+  /// Creates the gameplay screen with game configuration.
+  const GameplayScreen({required this.gameConfig, super.key});
+
+  /// The game configuration.
+  final GameConfig gameConfig;
 
   @override
   State<GameplayScreen> createState() => _GameplayScreenState();
@@ -47,7 +56,7 @@ class GameplayScreen extends StatefulWidget {
 class _GameplayScreenState extends State<GameplayScreen> {
   late final GameplayBloc _bloc;
   late final OnboardingService _onboardingService;
-  Category? _hoveringOverBottle;
+  CategoryRole? _hoveringOverBottle;
   bool _showError = false;
   bool _showOnboardingHints = false;
 
@@ -55,8 +64,14 @@ class _GameplayScreenState extends State<GameplayScreen> {
   void initState() {
     super.initState();
 
+    AppLogger.debug(
+      'GameplayScreen',
+      'initState',
+      () => 'Initializing gameplay for: ${widget.gameConfig.gameId}',
+    );
+
     _bloc = GameplayBloc(
-      scenarioService: ScenarioService(),
+      scenarioService: ScenarioService(gameConfig: widget.gameConfig),
       audioService: AudioServiceImpl(),
       hapticService: HapticServiceImpl(),
     );
@@ -180,9 +195,11 @@ class _GameplayScreenState extends State<GameplayScreen> {
           child: Center(
             child: ScenarioCard(
               scenario: scenario,
-              onAccepted: (category) {
+              categoryA: widget.gameConfig.categoryA,
+              categoryB: widget.gameConfig.categoryB,
+              onAccepted: (categoryRole) {
                 // This is called by DragTarget, not directly
-                bloc.add(DroppedOnBottle(category: category));
+                bloc.add(DroppedOnBottle(category: categoryRole));
               },
               showError: _showError,
             ),
@@ -197,8 +214,18 @@ class _GameplayScreenState extends State<GameplayScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildDragTarget(Category.fear, bloc, state),
-              _buildDragTarget(Category.worry, bloc, state),
+              _buildDragTarget(
+                CategoryRole.categoryA,
+                widget.gameConfig.categoryA,
+                bloc,
+                state,
+              ),
+              _buildDragTarget(
+                CategoryRole.categoryB,
+                widget.gameConfig.categoryB,
+                bloc,
+                state,
+              ),
             ],
           ),
         ),
@@ -207,13 +234,14 @@ class _GameplayScreenState extends State<GameplayScreen> {
   }
 
   Widget _buildDragTarget(
-    Category category,
+    CategoryRole categoryRole,
+    CategoryConfig categoryConfig,
     GameplayBloc bloc,
     GameplayPlaying state,
   ) {
     return DragTarget<Scenario>(
       onWillAcceptWithDetails: (details) {
-        setState(() => _hoveringOverBottle = category);
+        setState(() => _hoveringOverBottle = categoryRole);
         // Use captured bloc reference instead of context.read
         bloc.add(const DragStarted());
         return true;
@@ -224,7 +252,7 @@ class _GameplayScreenState extends State<GameplayScreen> {
       onAcceptWithDetails: (details) {
         setState(() => _hoveringOverBottle = null);
         // Use captured bloc reference instead of context.read
-        bloc.add(DroppedOnBottle(category: category));
+        bloc.add(DroppedOnBottle(category: categoryRole));
 
         // Mark onboarding complete after first drag
         if (_showOnboardingHints) {
@@ -244,16 +272,19 @@ class _GameplayScreenState extends State<GameplayScreen> {
         }
       },
       builder: (context, candidateData, rejectedData) {
-        final isHovering = _hoveringOverBottle == category;
+        final isHovering = _hoveringOverBottle == categoryRole;
         final showGlow =
             _showOnboardingHints && state.currentScenarioIndex == 0;
 
         Widget bottle = FloatingAnimation(
           duration: Duration(
-            milliseconds: 2000 + (category == Category.fear ? 0 : 300),
+            milliseconds: 2000 + (categoryRole is CategoryRoleA ? 0 : 300),
           ),
           offset: 6.0,
-          child: BottleWidget(category: category, isGlowing: isHovering),
+          child: BottleWidget(
+            categoryConfig: categoryConfig,
+            isGlowing: isHovering,
+          ),
         );
 
         // Wrap with glow effect for first-time users on first scenario
@@ -269,7 +300,23 @@ class _GameplayScreenState extends State<GameplayScreen> {
           );
         }
 
-        return bottle;
+        // Expand hit area for more reliable drop detection on all devices
+        // Show visual feedback when user can drop the card
+        final isDraggingOver = candidateData.isNotEmpty;
+        return Container(
+          width: 150, // 30px larger than bottle width (120)
+          height: 220, // 40px larger than bottle height (180)
+          decoration: isDraggingOver
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  border: Border.all(
+                    color: categoryConfig.colorStart.withValues(alpha: 0.5),
+                    width: 3,
+                  ),
+                )
+              : null,
+          child: Center(child: bottle),
+        );
       },
     );
   }

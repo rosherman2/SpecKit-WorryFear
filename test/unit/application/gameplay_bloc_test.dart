@@ -23,7 +23,7 @@ void main() {
   late MockAudioService mockAudioService;
   late MockHapticService mockHapticService;
 
-  // Test scenarios
+  // Test scenarios using CategoryRole
   final testScenarios = List.generate(
     10,
     (i) => SessionScenario(
@@ -31,7 +31,9 @@ void main() {
         id: 'test-$i',
         text: 'Test scenario $i',
         emoji: '🎯',
-        correctCategory: i % 2 == 0 ? Category.fear : Category.worry,
+        correctCategory: i % 2 == 0
+            ? const CategoryRoleA()
+            : const CategoryRoleB(),
       ),
     ),
   );
@@ -108,7 +110,9 @@ void main() {
       ),
       seed: () => GameplayPlaying(testScenarios, currentScenarioIndex: 0),
       act: (bloc) => bloc.add(
-        const DroppedOnBottle(category: Category.fear), // Scenario 0 is fear
+        DroppedOnBottle(
+          category: CategoryRole.categoryA,
+        ), // Scenario 0 is categoryA
       ),
       wait: const Duration(milliseconds: 1000),
       expect: () => [
@@ -133,9 +137,9 @@ void main() {
       ),
       seed: () => GameplayPlaying(testScenarios, currentScenarioIndex: 0),
       act: (bloc) => bloc.add(
-        const DroppedOnBottle(
-          category: Category.worry,
-        ), // Wrong - scenario 0 is fear
+        DroppedOnBottle(
+          category: CategoryRole.categoryB,
+        ), // Wrong - scenario 0 is categoryA
       ),
       wait: const Duration(milliseconds: 1100),
       expect: () => [
@@ -164,22 +168,23 @@ void main() {
               id: 'test-$i',
               text: 'Test $i',
               emoji: '🎯',
-              correctCategory: Category.fear,
+              correctCategory: const CategoryRoleA(),
             ),
           ).recordAnswer(isCorrect: true),
         );
         // Last one unanswered
         scenarios[9] = SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: 'test-9',
             text: 'Test 9',
             emoji: '🎯',
-            correctCategory: Category.fear,
+            correctCategory: const CategoryRoleA(),
           ),
         );
         return GameplayPlaying(scenarios, currentScenarioIndex: 9);
       },
-      act: (bloc) => bloc.add(const DroppedOnBottle(category: Category.fear)),
+      act: (bloc) =>
+          bloc.add(DroppedOnBottle(category: CategoryRole.categoryA)),
       wait: const Duration(milliseconds: 1000),
       expect: () => [
         isA<GameplayCorrectFeedback>(),

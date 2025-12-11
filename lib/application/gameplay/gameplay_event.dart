@@ -33,13 +33,13 @@ class DragStarted extends GameplayEvent {
 /// Event triggered when user drops card on a bottle.
 ///
 /// Parameters:
-/// - [category]: Which bottle the card was dropped on (fear or worry)
+/// - [category]: Which bottle the card was dropped on (categoryA or categoryB)
 class DroppedOnBottle extends GameplayEvent {
   /// Creates a dropped on bottle event.
   const DroppedOnBottle({required this.category});
 
-  /// The category of the bottle where card was dropped.
-  final Category category;
+  /// The category role of the bottle where card was dropped.
+  final CategoryRole category;
 
   @override
   List<Object?> get props => [category];

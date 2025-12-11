@@ -11,30 +11,30 @@ void main() {
     late Session testSession;
 
     setUp(() {
-      // Create a test session with mixed results
+      // Create a test session with mixed results using CategoryRole
       final scenarios = [
         SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: '1',
             text: 'Test 1',
             emoji: '🎯',
-            correctCategory: Category.fear,
+            correctCategory: const CategoryRoleA(),
           ),
         ).recordAnswer(isCorrect: true),
         SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: '2',
             text: 'Test 2',
             emoji: '🎯',
-            correctCategory: Category.worry,
+            correctCategory: const CategoryRoleB(),
           ),
         ).recordAnswer(isCorrect: false),
         SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: '3',
             text: 'Test 3',
             emoji: '🎯',
-            correctCategory: Category.fear,
+            correctCategory: const CategoryRoleA(),
           ),
         ).recordAnswer(isCorrect: true),
       ];
@@ -103,22 +103,22 @@ void main() {
     testWidgets('does not show Review Mistakes button for perfect score', (
       tester,
     ) async {
-      // Create perfect session
+      // Create perfect session using CategoryRole
       final perfectScenarios = [
         SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: '1',
             text: 'Test 1',
             emoji: '🎯',
-            correctCategory: Category.fear,
+            correctCategory: const CategoryRoleA(),
           ),
         ).recordAnswer(isCorrect: true),
         SessionScenario(
-          scenario: const Scenario(
+          scenario: Scenario(
             id: '2',
             text: 'Test 2',
             emoji: '🎯',
-            correctCategory: Category.worry,
+            correctCategory: const CategoryRoleB(),
           ),
         ).recordAnswer(isCorrect: true),
       ];
@@ -130,6 +130,59 @@ void main() {
 
       // Should NOT have Review Mistakes button
       expect(find.text('Review Mistakes'), findsNothing);
+    });
+
+    // Bug fix tests for vertical centering
+    group('centering layout', () {
+      testWidgets('uses LayoutBuilder for viewport-aware centering', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(home: CompletionScreen(session: testSession)),
+        );
+
+        // Verify LayoutBuilder is used for centering
+        expect(find.byType(LayoutBuilder), findsOneWidget);
+      });
+
+      testWidgets('uses ConstrainedBox for minimum height constraint', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(home: CompletionScreen(session: testSession)),
+        );
+
+        // Verify at least one ConstrainedBox is in the tree
+        // (Flutter internals may add others)
+        expect(find.byType(ConstrainedBox), findsAtLeastNWidgets(1));
+      });
+
+      testWidgets('Column has center alignment for vertical centering', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(home: CompletionScreen(session: testSession)),
+        );
+
+        // Find a Column with center alignment (the main content column)
+        final columnFinder = find.byWidgetPredicate(
+          (widget) =>
+              widget is Column &&
+              widget.mainAxisAlignment == MainAxisAlignment.center,
+        );
+        expect(columnFinder, findsOneWidget);
+      });
+
+      testWidgets('content is scrollable when it overflows viewport', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(home: CompletionScreen(session: testSession)),
+        );
+
+        // Verify SingleChildScrollView is present for scrollability
+        expect(find.byType(SingleChildScrollView), findsOneWidget);
+      });
     });
   });
 }
