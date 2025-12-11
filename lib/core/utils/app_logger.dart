@@ -18,6 +18,7 @@ import 'package:path_provider/path_provider.dart';
 /// ```
 class AppLogger {
   static LogFormat _format = LogFormat.console;
+  static LogLevel _minLevel = LogLevel.debug; // Default: log everything
   static int _maxFileSize = 5 * 1024 * 1024; // 5MB default
   static int _maxFiles = 5;
   static File? _currentLogFile;
@@ -30,33 +31,51 @@ class AppLogger {
   ///
   /// Parameters:
   /// - [format]: Output format (console or json)
-  /// - [maxFileSize]: Maximum size in bytes before rotation (default: 5MB)
-  /// - [maxFiles]: Number of log files to keep (default: 5)
+  /// - [minLevel]: Minimum log level to record (default: debug - logs everything)
+  /// - [maxFileSize]: Maximum size in bytes before rotation (default: 5MB, json only)
+  /// - [maxFiles]: Number of log files to keep (default: 5, json only)
+  ///
+  /// Note: Console format does NOT create log files. File parameters are ignored.
   ///
   /// Example:
   /// ```dart
+  /// // Console-only logging with warning level minimum
   /// AppLogger.initialize(
   ///   format: LogFormat.console,
+  ///   minLevel: LogLevel.warning,
+  /// );
+  ///
+  /// // JSON logging with file rotation
+  /// AppLogger.initialize(
+  ///   format: LogFormat.json,
+  ///   minLevel: LogLevel.debug,
   ///   maxFileSize: 5 * 1024 * 1024,
   ///   maxFiles: 5,
   /// );
   /// ```
   static Future<void> initialize({
     required LogFormat format,
+    LogLevel minLevel = LogLevel.debug,
     int maxFileSize = 5 * 1024 * 1024,
     int maxFiles = 5,
   }) async {
     if (kDebugMode) {
       _format = format;
+      _minLevel = minLevel;
       _maxFileSize = maxFileSize;
       _maxFiles = maxFiles;
-      await _initializeLogFile();
+
+      // Only initialize file logging for JSON format
+      if (_format == LogFormat.json) {
+        await _initializeLogFile();
+      }
+
       _isInitialized = true;
     }
   }
 
   /// Logs a debug-level message with lazy evaluation.
-  /// Only evaluated and logged in debug builds.
+  /// Only evaluated and logged in debug builds and if minLevel allows.
   ///
   /// Parameters:
   /// - [className]: Name of the class where log originates
@@ -69,13 +88,14 @@ class AppLogger {
     String methodName,
     String Function() messageFn,
   ) {
-    if (kDebugMode) {
+    if (kDebugMode && _minLevel.index <= LogLevel.debug.index) {
       _log('DEBUG', className, methodName, messageFn);
     }
   }
 
   /// Logs an info-level message with lazy evaluation.
   /// Use for high-level events like user actions or state changes.
+  /// Only logged if minLevel allows.
   ///
   /// Parameters:
   /// - [className]: Name of the class where log originates
@@ -86,13 +106,14 @@ class AppLogger {
     String methodName,
     String Function() messageFn,
   ) {
-    if (kDebugMode) {
+    if (kDebugMode && _minLevel.index <= LogLevel.info.index) {
       _log('INFO', className, methodName, messageFn);
     }
   }
 
   /// Logs a warning-level message with lazy evaluation.
   /// Use for recoverable issues or deprecated usage.
+  /// Only logged if minLevel allows.
   ///
   /// Parameters:
   /// - [className]: Name of the class where log originates
@@ -103,13 +124,14 @@ class AppLogger {
     String methodName,
     String Function() messageFn,
   ) {
-    if (kDebugMode) {
+    if (kDebugMode && _minLevel.index <= LogLevel.warning.index) {
       _log('WARNING', className, methodName, messageFn);
     }
   }
 
   /// Logs an error-level message with lazy evaluation.
   /// Use for failures that impact functionality.
+  /// Only logged if minLevel allows.
   ///
   /// Parameters:
   /// - [className]: Name of the class where log originates
@@ -120,7 +142,7 @@ class AppLogger {
     String methodName,
     String Function() messageFn,
   ) {
-    if (kDebugMode) {
+    if (kDebugMode && _minLevel.index <= LogLevel.error.index) {
       _log('ERROR', className, methodName, messageFn);
     }
   }
@@ -155,8 +177,10 @@ class AppLogger {
       // Write to console
       _writeToConsole(severity, className, methodName, message, now);
 
-      // Write to file
-      _writeToFile(severity, className, methodName, message, now);
+      // Write to file (only for JSON format)
+      if (_format == LogFormat.json) {
+        _writeToFile(severity, className, methodName, message, now);
+      }
     } catch (e) {
       // Never crash app due to logging failure
       debugPrint('AppLogger error: $e');
@@ -335,13 +359,31 @@ class AppLogger {
   }
 }
 
+/// Log severity levels in ascending order.
+/// Used for filtering logs based on minimum severity.
+enum LogLevel {
+  /// Detailed debug information
+  debug,
+
+  /// General informational messages
+  info,
+
+  /// Warning messages for recoverable issues
+  warning,
+
+  /// Error messages for failures
+  error,
+}
+
 /// Log output format options.
-/// - console: Human-readable format for development
-/// - json: Structured JSON format for parsing/analysis
+/// - console: Human-readable format for development (no file logging)
+/// - json: Structured JSON format for parsing/analysis (with file logging)
 enum LogFormat {
   /// Human-readable console format: [timestamp] [LEVEL] class.method: message
+  /// Note: Console format does NOT create log files
   console,
 
   /// Structured JSON format with all fields
+  /// Note: JSON format creates and rotates log files
   json,
 }

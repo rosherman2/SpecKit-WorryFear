@@ -13,7 +13,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize structured logging per constitution Principle I
-  await AppLogger.initialize(format: LogFormat.console);
+  await AppLogger.initialize(
+    format: LogFormat.console,
+    minLevel: LogLevel.debug,
+  );
   AppLogger.info('main', 'main', () => 'Application starting');
 
   runApp(const WorryFearApp());
