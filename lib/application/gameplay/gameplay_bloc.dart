@@ -113,8 +113,8 @@ class GameplayBloc extends Bloc<GameplayEvent, GameplayState> {
       updatedScenarios[playingState.currentScenarioIndex] = currentScenario
           .recordAnswer(isCorrect: true);
 
-      // Emit feedback state
-      emit(const GameplayCorrectFeedback());
+      // Emit feedback state with bottle position for flying animation
+      emit(GameplayCorrectFeedback(bottlePosition: event.bottlePosition));
 
       // Wait for animation to complete (800ms animation + 100ms buffer)
       await Future.delayed(const Duration(milliseconds: 900));

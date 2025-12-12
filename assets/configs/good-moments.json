@@ -1,6 +1,8 @@
 {
     "gameId": "good-moments-vs-other",
     "version": "1.0",
+    "showSuccessAnimation": false,
+    "showSuccessPointsAnimation": false,
     "intro": {
         "title": "Recognize Good Moments",
         "educationalText": [

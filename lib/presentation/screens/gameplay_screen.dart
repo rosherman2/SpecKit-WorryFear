@@ -36,7 +36,7 @@ import 'completion_screen.dart';
 /// - Progress bar showing session progress
 /// - Scenario card (draggable)
 /// - Two bottle drop zones (config-driven categories)
-/// - Feedback animations for correct/incorrect answers
+/// - Feedback animations for correct/incorrect answers (as overlay)
 ///
 /// Example:
 /// ```dart
@@ -59,6 +59,13 @@ class _GameplayScreenState extends State<GameplayScreen> {
   CategoryRole? _hoveringOverBottle;
   bool _showError = false;
   bool _showOnboardingHints = false;
+
+  // GlobalKeys to track bottle positions for flying animation
+  final GlobalKey _bottleAKey = GlobalKey();
+  final GlobalKey _bottleBKey = GlobalKey();
+
+  // Store last playing state for overlay during feedback
+  GameplayPlaying? _lastPlayingState;
 
   @override
   void initState() {
@@ -109,6 +116,16 @@ class _GameplayScreenState extends State<GameplayScreen> {
     super.dispose();
   }
 
+  /// Gets the center position of a bottle using its GlobalKey.
+  Offset? _getBottlePosition(GlobalKey key) {
+    final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return null;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    // Return center of the bottle
+    return Offset(position.dx + size.width / 2, position.dy + size.height / 2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
@@ -118,6 +135,10 @@ class _GameplayScreenState extends State<GameplayScreen> {
         body: SafeArea(
           child: BlocConsumer<GameplayBloc, GameplayState>(
             listener: (context, state) {
+              // Store playing state for overlay during feedback
+              if (state is GameplayPlaying) {
+                _lastPlayingState = state;
+              }
               // Show error state briefly on incorrect answer
               if (state is GameplayIncorrectFeedback) {
                 setState(() => _showError = true);
@@ -134,17 +155,9 @@ class _GameplayScreenState extends State<GameplayScreen> {
                   child: CircularProgressIndicator(color: AppColors.gold),
                 ),
                 GameplayPlaying() => _buildPlayingState(context, state),
-                GameplayCorrectFeedback() => const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Points animation at top
-                      PointsAnimation(),
-                      SizedBox(height: 40),
-                      // Success animation in center
-                      SuccessAnimation(),
-                    ],
-                  ),
+                GameplayCorrectFeedback() => _buildCorrectFeedbackOverlay(
+                  context,
+                  state,
                 ),
                 GameplayIncorrectFeedback() => const Center(
                   child: Text(
@@ -162,6 +175,33 @@ class _GameplayScreenState extends State<GameplayScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  /// Builds the correct feedback as an overlay on the playing state.
+  Widget _buildCorrectFeedbackOverlay(
+    BuildContext context,
+    GameplayCorrectFeedback state,
+  ) {
+    return Stack(
+      children: [
+        // Background: dimmed playing state
+        if (_lastPlayingState != null)
+          Opacity(
+            opacity: 0.5,
+            child: IgnorePointer(
+              child: _buildPlayingState(context, _lastPlayingState!),
+            ),
+          ),
+
+        // Points animation flying from bottle to center (if enabled in config)
+        if (widget.gameConfig.showSuccessPointsAnimation)
+          PointsAnimation(startPosition: state.bottlePosition),
+
+        // Success animation in center (if enabled in config)
+        if (widget.gameConfig.showSuccessAnimation)
+          const Center(child: SuccessAnimation()),
+      ],
     );
   }
 
@@ -199,7 +239,17 @@ class _GameplayScreenState extends State<GameplayScreen> {
               categoryB: widget.gameConfig.categoryB,
               onAccepted: (categoryRole) {
                 // This is called by DragTarget, not directly
-                bloc.add(DroppedOnBottle(category: categoryRole));
+                final bottleKey = categoryRole is CategoryRoleA
+                    ? _bottleAKey
+                    : _bottleBKey;
+                final position =
+                    _getBottlePosition(bottleKey) ?? const Offset(0, 0);
+                bloc.add(
+                  DroppedOnBottle(
+                    category: categoryRole,
+                    bottlePosition: position,
+                  ),
+                );
               },
               showError: _showError,
             ),
@@ -219,12 +269,14 @@ class _GameplayScreenState extends State<GameplayScreen> {
                 widget.gameConfig.categoryA,
                 bloc,
                 state,
+                _bottleAKey,
               ),
               _buildDragTarget(
                 CategoryRole.categoryB,
                 widget.gameConfig.categoryB,
                 bloc,
                 state,
+                _bottleBKey,
               ),
             ],
           ),
@@ -238,6 +290,7 @@ class _GameplayScreenState extends State<GameplayScreen> {
     CategoryConfig categoryConfig,
     GameplayBloc bloc,
     GameplayPlaying state,
+    GlobalKey bottleKey,
   ) {
     return DragTarget<Scenario>(
       onWillAcceptWithDetails: (details) {
@@ -251,8 +304,12 @@ class _GameplayScreenState extends State<GameplayScreen> {
       },
       onAcceptWithDetails: (details) {
         setState(() => _hoveringOverBottle = null);
+        // Get bottle position for flying animation
+        final position = _getBottlePosition(bottleKey) ?? const Offset(0, 0);
         // Use captured bloc reference instead of context.read
-        bloc.add(DroppedOnBottle(category: categoryRole));
+        bloc.add(
+          DroppedOnBottle(category: categoryRole, bottlePosition: position),
+        );
 
         // Mark onboarding complete after first drag
         if (_showOnboardingHints) {
@@ -282,6 +339,7 @@ class _GameplayScreenState extends State<GameplayScreen> {
           ),
           offset: 6.0,
           child: BottleWidget(
+            key: bottleKey,
             categoryConfig: categoryConfig,
             isGlowing: isHovering,
           ),

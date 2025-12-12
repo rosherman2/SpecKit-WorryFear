@@ -25,6 +25,8 @@ class GameConfig extends Equatable {
     required this.categoryA,
     required this.categoryB,
     required this.scenarios,
+    this.showSuccessAnimation = true,
+    this.showSuccessPointsAnimation = true,
   });
 
   /// Unique identifier for this game variant.
@@ -50,6 +52,16 @@ class GameConfig extends Equatable {
   /// The game randomly selects 10 from this list per session.
   final List<ScenarioConfig> scenarios;
 
+  /// Whether to show success animation on correct answers.
+  /// If false, only points animation will play.
+  /// Default: true
+  final bool showSuccessAnimation;
+
+  /// Whether to show points animation (+2) on correct answers.
+  /// If false, success sound still plays but no visual points.
+  /// Default: true
+  final bool showSuccessPointsAnimation;
+
   /// Creates a GameConfig from JSON data.
   ///
   /// Parses the complete config file structure including intro, categories, and scenarios.
@@ -73,6 +85,9 @@ class GameConfig extends Equatable {
       scenarios: (json['scenarios'] as List<dynamic>)
           .map((e) => ScenarioConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
+      showSuccessAnimation: json['showSuccessAnimation'] as bool? ?? true,
+      showSuccessPointsAnimation:
+          json['showSuccessPointsAnimation'] as bool? ?? true,
     );
   }
 
@@ -96,6 +111,8 @@ class GameConfig extends Equatable {
     categoryA,
     categoryB,
     scenarios,
+    showSuccessAnimation,
+    showSuccessPointsAnimation,
   ];
 }
 

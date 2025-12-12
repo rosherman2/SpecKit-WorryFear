@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -112,6 +114,7 @@ void main() {
       act: (bloc) => bloc.add(
         DroppedOnBottle(
           category: CategoryRole.categoryA,
+          bottlePosition: Offset.zero,
         ), // Scenario 0 is categoryA
       ),
       wait: const Duration(milliseconds: 1000),
@@ -139,6 +142,7 @@ void main() {
       act: (bloc) => bloc.add(
         DroppedOnBottle(
           category: CategoryRole.categoryB,
+          bottlePosition: Offset.zero,
         ), // Wrong - scenario 0 is categoryA
       ),
       wait: const Duration(milliseconds: 1100),
@@ -183,8 +187,12 @@ void main() {
         );
         return GameplayPlaying(scenarios, currentScenarioIndex: 9);
       },
-      act: (bloc) =>
-          bloc.add(DroppedOnBottle(category: CategoryRole.categoryA)),
+      act: (bloc) => bloc.add(
+        DroppedOnBottle(
+          category: CategoryRole.categoryA,
+          bottlePosition: Offset.zero,
+        ),
+      ),
       wait: const Duration(milliseconds: 1000),
       expect: () => [
         isA<GameplayCorrectFeedback>(),

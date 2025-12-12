@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 import '../../domain/models/category.dart';
 
@@ -34,15 +36,19 @@ class DragStarted extends GameplayEvent {
 ///
 /// Parameters:
 /// - [category]: Which bottle the card was dropped on (categoryA or categoryB)
+/// - [bottlePosition]: Screen position of the bottle for animation start point
 class DroppedOnBottle extends GameplayEvent {
   /// Creates a dropped on bottle event.
-  const DroppedOnBottle({required this.category});
+  const DroppedOnBottle({required this.category, required this.bottlePosition});
 
   /// The category role of the bottle where card was dropped.
   final CategoryRole category;
 
+  /// Screen position of the bottle center for flying points animation.
+  final Offset bottlePosition;
+
   @override
-  List<Object?> get props => [category];
+  List<Object?> get props => [category, bottlePosition];
 }
 
 /// Event triggered when user drops card outside both bottles.

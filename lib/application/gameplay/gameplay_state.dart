@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 import '../../domain/models/session.dart';
 import '../../domain/models/session_scenario.dart';
@@ -54,10 +56,16 @@ class GameplayPlaying extends GameplayState {
 /// State showing correct answer feedback animation.
 ///
 /// Brief state for success animation before advancing to next scenario.
-/// Duration: per AnimationDurations.successAnimationShort/Medium/Long.
+/// Contains bottle position for flying points animation.
 class GameplayCorrectFeedback extends GameplayState {
-  /// Creates a correct feedback state.
-  const GameplayCorrectFeedback();
+  /// Creates a correct feedback state with bottle position for animation.
+  const GameplayCorrectFeedback({required this.bottlePosition});
+
+  /// Screen position of the correct bottle for flying points animation.
+  final Offset bottlePosition;
+
+  @override
+  List<Object?> get props => [bottlePosition];
 }
 
 /// State showing incorrect answer feedback animation.
