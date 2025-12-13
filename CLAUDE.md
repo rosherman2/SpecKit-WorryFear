@@ -4,7 +4,8 @@ Auto-generated from all feature plans. Last updated: 2025-12-09
 
 ## Active Technologies
 
-- Dart 3.x / Flutter 3.24+ + flutter_bloc, equatable, audioplayers, vibration (001-worry-fear-game)
+- Dart 3.x / Flutter 3.24+ + flutter_bloc, equatable, audioplayers, vibration (existing) (002-savoring-game)
+- SharedPreferences (first-time flag only) (002-savoring-game)
 
 ## Project Structure
 
@@ -22,6 +23,8 @@ tests/
 Dart 3.x / Flutter 3.24+: Follow standard conventions
 
 ## Recent Changes
+
+- 002-savoring-game: Added Dart 3.x / Flutter 3.24+ + flutter_bloc, equatable, audioplayers, vibration (existing)
 
 - 001-worry-fear-game: Added Dart 3.x / Flutter 3.24+ + flutter_bloc, equatable, audioplayers, vibration
 
