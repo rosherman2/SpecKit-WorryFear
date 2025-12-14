@@ -141,18 +141,13 @@ void main() {
     testWidgets('should call onTileDropped with correct index', (
       WidgetTester tester,
     ) async {
-      // Arrange: Track callback
-      int? droppedIndex;
-
       // Act: Build sentence display
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SentenceDisplay(
               stem: singleBlankStem,
-              onTileDropped: (index, tile) {
-                droppedIndex = index;
-              },
+              onTileDropped: (index, tile) {},
             ),
           ),
         ),
