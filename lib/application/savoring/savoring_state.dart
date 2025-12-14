@@ -9,7 +9,12 @@ sealed class SavoringState extends Equatable {
 }
 
 /// Initial state before game starts.
+///
+/// This state is emitted when the cubit is first created,
+/// before [SavoringCubit.startGame] is called.
+/// The UI typically shows a loading indicator during this state.
 class SavoringInitial extends SavoringState {
+  /// Creates an initial savoring state.
   const SavoringInitial();
 
   @override
@@ -18,6 +23,7 @@ class SavoringInitial extends SavoringState {
 
 /// State during active gameplay.
 class SavoringPlaying extends SavoringState {
+  /// Creates a savoring playing state with the current game data.
   const SavoringPlaying({
     required this.currentStem,
     required this.currentRound,
@@ -121,6 +127,7 @@ class SavoringPlaying extends SavoringState {
 
 /// State when game session is completed.
 class SavoringCompleted extends SavoringState {
+  /// Creates a savoring completed state with final scores.
   const SavoringCompleted({
     required this.totalScore,
     required this.totalRounds,

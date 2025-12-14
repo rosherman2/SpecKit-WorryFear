@@ -7,7 +7,7 @@ import 'blank_zone.dart';
 /// Purpose: Render sentence template with interactive blanks for word drops.
 ///
 /// Parses templateText like "It is okay to {1}" and replaces {1}, {2}
-/// with BlankZone widgets inline with the text.
+/// with BlankZone widgets inline with the text using RichText.
 ///
 /// Example:
 /// ```dart
@@ -46,22 +46,16 @@ class SentenceDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Parse template text and build inline widgets
-    final parts = _parseTemplate(stem.templateText);
+    // Parse template text and build inline spans
+    final spans = _parseTemplate(stem.templateText);
 
-    return Wrap(
-      alignment: WrapAlignment.center,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 8,
-      runSpacing: 12,
-      children: parts,
-    );
+    return Text.rich(TextSpan(children: spans), textAlign: TextAlign.center);
   }
 
-  /// Parses the template text and returns a list of widgets.
-  /// Text parts become Text widgets, {1} and {2} become BlankZones.
-  List<Widget> _parseTemplate(String template) {
-    final widgets = <Widget>[];
+  /// Parses the template text and returns a list of InlineSpans.
+  /// Text parts become TextSpans, {1} and {2} become WidgetSpans with BlankZones.
+  List<InlineSpan> _parseTemplate(String template) {
+    final spans = <InlineSpan>[];
     final pattern = RegExp(r'\{(\d+)\}');
 
     var lastEnd = 0;
@@ -69,12 +63,12 @@ class SentenceDisplay extends StatelessWidget {
       // Add text before this blank
       if (match.start > lastEnd) {
         final textPart = template.substring(lastEnd, match.start);
-        widgets.add(_buildTextPart(textPart));
+        spans.add(_buildTextSpan(textPart));
       }
 
-      // Add blank zone
+      // Add blank zone as widget span
       final blankIndex = int.parse(match.group(1)!);
-      widgets.add(_buildBlankZone(blankIndex));
+      spans.add(_buildBlankSpan(blankIndex));
 
       lastEnd = match.end;
     }
@@ -82,30 +76,37 @@ class SentenceDisplay extends StatelessWidget {
     // Add remaining text after last blank
     if (lastEnd < template.length) {
       final textPart = template.substring(lastEnd);
-      widgets.add(_buildTextPart(textPart));
+      spans.add(_buildTextSpan(textPart));
     }
 
-    return widgets;
+    return spans;
   }
 
-  Widget _buildTextPart(String text) {
-    return Text(
-      text.trim(),
+  TextSpan _buildTextSpan(String text) {
+    return TextSpan(
+      text: text,
       style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w500,
-        height: 1.5,
+        height: 2.5, // Increased for more vertical spacing
+        color: Colors.black87,
       ),
     );
   }
 
-  Widget _buildBlankZone(int index) {
-    return BlankZone(
-      blankIndex: index,
-      filledTile: filledTiles[index],
-      isLocked: lockedBlanks[index] ?? false,
-      isCorrect: blankStates[index],
-      onTileDropped: (tile) => onTileDropped(index, tile),
+  WidgetSpan _buildBlankSpan(int index) {
+    return WidgetSpan(
+      alignment: PlaceholderAlignment.middle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        child: BlankZone(
+          blankIndex: index,
+          filledTile: filledTiles[index],
+          isLocked: lockedBlanks[index] ?? false,
+          isCorrect: blankStates[index],
+          onTileDropped: (tile) => onTileDropped(index, tile),
+        ),
+      ),
     );
   }
 }

@@ -148,18 +148,18 @@
 
 ### Tests First (TDD)
 
-- [ ] T049 [US4] Add double-blank test cases to `test/unit/application/savoring_cubit_test.dart`
-- [ ] T050 [US4] Add locked state test cases to `test/widget/blank_zone_test.dart`
+- [x] T049 [US4] Add double-blank test cases to `test/unit/application/savoring_cubit_test.dart`
+- [x] T050 [US4] Add locked state test cases to `test/widget/blank_zone_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T051 [US4] Add `isLocked` property to `BlankZone` widget in `lib/presentation/widgets/blank_zone.dart`
-- [ ] T052 [US4] Add dimmed/locked visual state in `BlankZone`
-- [ ] T053 [US4] Update `SavoringCubit` to track blank1Filled state
-- [ ] T054 [US4] Update `SavoringCubit` to unlock Blank 2 when Blank 1 is correct
-- [ ] T055 [US4] Update `SentenceDisplay` to render numbered blanks {1} and {2}
-- [ ] T056 [US4] Add separate tile groups per blank in `SavoringGameplayScreen`
-- [ ] T057 [US4] Run US4 tests: `flutter test test/unit/application/savoring_cubit_test.dart test/widget/blank_zone_test.dart`
+- [x] T051 [US4] Add `isLocked` property to `BlankZone` widget in `lib/presentation/widgets/blank_zone.dart`
+- [x] T052 [US4] Add dimmed/locked visual state in `BlankZone`
+- [x] T053 [US4] Update `SavoringCubit` to track blank1Filled state
+- [x] T054 [US4] Update `SavoringCubit` to unlock Blank 2 when Blank 1 is correct
+- [x] T055 [US4] Update `SentenceDisplay` to render numbered blanks {1} and {2}
+- [x] T056 [US4] Add separate tile groups per blank in `SavoringGameplayScreen`
+- [x] T057 [US4] Run US4 tests: `flutter test test/unit/application/savoring_cubit_test.dart test/widget/blank_zone_test.dart`
 
 **Checkpoint**: Double-blank gameplay works: Blank 2 locked, unlocks after Blank 1 correct
 
