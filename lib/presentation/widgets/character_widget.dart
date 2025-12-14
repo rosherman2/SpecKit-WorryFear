@@ -106,7 +106,7 @@ class _CharacterWidgetState extends State<CharacterWidget>
         return Transform.scale(scale: _breathingAnimation.value, child: child);
       },
       child: _buildCharacterContainer(
-        emoji: '✨',
+        imagePath: 'assets/images/savoring/character_idle.png',
         backgroundColor: AppColors.lightGray,
       ),
     );
@@ -115,7 +115,7 @@ class _CharacterWidgetState extends State<CharacterWidget>
   Widget _buildAffirmingCharacter(Key key) {
     return _buildCharacterContainer(
       key: key,
-      emoji: '🌟',
+      imagePath: 'assets/images/savoring/character_affirming.png',
       backgroundColor: AppColors.success.withOpacity(0.2),
     );
   }
@@ -123,14 +123,14 @@ class _CharacterWidgetState extends State<CharacterWidget>
   Widget _buildCelebrationCharacter(Key key) {
     return _buildCharacterContainer(
       key: key,
-      emoji: '🎉',
+      imagePath: 'assets/images/savoring/character_celebration.png',
       backgroundColor: AppColors.gold.withOpacity(0.2),
     );
   }
 
   Widget _buildCharacterContainer({
     Key? key,
-    required String emoji,
+    required String imagePath,
     required Color backgroundColor,
   }) {
     return Container(
@@ -145,7 +145,10 @@ class _CharacterWidgetState extends State<CharacterWidget>
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Center(child: Text(emoji, style: const TextStyle(fontSize: 48))),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.asset(imagePath, fit: BoxFit.cover),
+      ),
     );
   }
 }

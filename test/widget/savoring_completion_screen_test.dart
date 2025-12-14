@@ -41,8 +41,8 @@ void main() {
         MaterialApp(home: SavoringCompletionScreen(state: completedState)),
       );
 
-      // Assert: Find celebration emoji
-      expect(find.text('✨'), findsWidgets);
+      // Assert: Find character image
+      expect(find.byType(Image), findsOneWidget);
     });
 
     testWidgets('should display Finish button', (WidgetTester tester) async {
@@ -72,9 +72,11 @@ void main() {
 
       // Act: Scroll to and tap Finish button
       await tester.ensureVisible(find.text('Finish'));
-      await tester.pumpAndSettle();
+      await tester.pump();
       await tester.tap(find.text('Finish'));
-      await tester.pumpAndSettle();
+      await tester.pump(); // Start navigation
+      await tester.pump(const Duration(milliseconds: 500)); // Navigation animation
+      await tester.pump(const Duration(milliseconds: 500)); // Complete
 
       // Assert: Navigated to welcome
       expect(find.text('Welcome Screen'), findsOneWidget);

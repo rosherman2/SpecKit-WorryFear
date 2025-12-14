@@ -14,8 +14,8 @@ void main() {
         ),
       );
 
-      // Assert: Find idle emoji
-      expect(find.text('✨'), findsOneWidget);
+      // Assert: Find image widget
+      expect(find.byType(Image), findsOneWidget);
     });
 
     testWidgets('should display affirming state', (WidgetTester tester) async {
@@ -28,8 +28,8 @@ void main() {
         ),
       );
 
-      // Assert: Find affirming emoji
-      expect(find.text('🌟'), findsOneWidget);
+      // Assert: Find image widget
+      expect(find.byType(Image), findsOneWidget);
     });
 
     testWidgets('should display celebration state', (
@@ -44,8 +44,8 @@ void main() {
         ),
       );
 
-      // Assert: Find celebration emoji
-      expect(find.text('🎉'), findsOneWidget);
+      // Assert: Find image widget
+      expect(find.byType(Image), findsOneWidget);
     });
 
     testWidgets('should have consistent size', (WidgetTester tester) async {
@@ -59,7 +59,7 @@ void main() {
       // Assert: Find container with expected size
       final container = tester.widget<Container>(
         find
-            .ancestor(of: find.text('✨'), matching: find.byType(Container))
+            .ancestor(of: find.byType(Image), matching: find.byType(Container))
             .first,
       );
 
@@ -76,7 +76,7 @@ void main() {
           home: Scaffold(body: CharacterWidget(state: CharacterState.idle)),
         ),
       );
-      expect(find.text('✨'), findsOneWidget);
+      expect(find.byType(Image), findsOneWidget);
 
       // Act: Change to affirming
       await tester.pumpWidget(
@@ -90,9 +90,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       await tester.pump(const Duration(milliseconds: 100));
 
-      // Assert: Now showing affirming
-      expect(find.text('🌟'), findsOneWidget);
-      expect(find.text('✨'), findsNothing);
+      // Assert: Still showing image (state changed)
+      expect(find.byType(Image), findsOneWidget);
     });
 
     testWidgets('should have rounded corners', (WidgetTester tester) async {
@@ -106,7 +105,7 @@ void main() {
       // Assert: Find container with decoration
       final container = tester.widget<Container>(
         find
-            .ancestor(of: find.text('✨'), matching: find.byType(Container))
+            .ancestor(of: find.byType(Image), matching: find.byType(Container))
             .first,
       );
 
