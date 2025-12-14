@@ -117,24 +117,24 @@
 
 ### Tests First (TDD)
 
-- [ ] T034 [P] [US3] Write widget test for `WordTileWidget` in `test/widget/word_tile_widget_test.dart`
-- [ ] T035 [P] [US3] Write widget test for `BlankZone` in `test/widget/blank_zone_test.dart`
-- [ ] T036 [P] [US3] Write widget test for `SentenceDisplay` in `test/widget/sentence_display_test.dart`
-- [ ] T037 [US3] Write unit test for `SavoringCubit` in `test/unit/application/savoring_cubit_test.dart`
+- [x] T034 [P] [US3] Write widget test for `WordTileWidget` in `test/widget/word_tile_widget_test.dart`
+- [x] T035 [P] [US3] Write widget test for `BlankZone` in `test/widget/blank_zone_test.dart`
+- [x] T036 [P] [US3] Write widget test for `SentenceDisplay` in `test/widget/sentence_display_test.dart`
+- [x] T037 [US3] Write unit test for `SavoringCubit` in `test/unit/application/savoring_cubit_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T038 [P] [US3] Create `WordTileWidget` with Draggable in `lib/presentation/widgets/word_tile_widget.dart`
-- [ ] T039 [P] [US3] Create `BlankZone` with DragTarget in `lib/presentation/widgets/blank_zone.dart`
-- [ ] T040 [US3] Create `SentenceDisplay` widget in `lib/presentation/widgets/sentence_display.dart` (depends on T039)
-- [ ] T041 [US3] Create `SavoringCubit` with states in `lib/application/savoring/savoring_cubit.dart`
-- [ ] T042 [US3] Create `SavoringState` with equatable in `lib/application/savoring/savoring_state.dart`
-- [ ] T043 [US3] Create `SavoringGameplayScreen` in `lib/presentation/screens/savoring_gameplay_screen.dart`
-- [ ] T044 [US3] Add haptic feedback on tile drop using existing `HapticService`
-- [ ] T045 [US3] Add audio feedback on correct/incorrect using existing `AudioService`
-- [ ] T046 [US3] Add 1.5s auto-advance timer after correct answer
-- [ ] T047 [US3] Add logging for tile drops and round transitions
-- [ ] T048 [US3] Run US3 tests: `flutter test test/widget/word_tile_widget_test.dart test/widget/blank_zone_test.dart test/widget/sentence_display_test.dart test/unit/application/savoring_cubit_test.dart`
+- [x] T038 [P] [US3] Create `WordTileWidget` with Draggable in `lib/presentation/widgets/word_tile_widget.dart`
+- [x] T039 [P] [US3] Create `BlankZone` with DragTarget in `lib/presentation/widgets/blank_zone.dart`
+- [x] T040 [US3] Create `SentenceDisplay` widget in `lib/presentation/widgets/sentence_display.dart` (depends on T039)
+- [x] T041 [US3] Create `SavoringCubit` with states in `lib/application/savoring/savoring_cubit.dart`
+- [x] T042 [US3] Create `SavoringState` with equatable in `lib/application/savoring/savoring_state.dart`
+- [x] T043 [US3] Create `SavoringGameplayScreen` in `lib/presentation/screens/savoring_gameplay_screen.dart`
+- [x] T044 [US3] Add haptic feedback on tile drop using existing `HapticService`
+- [x] T045 [US3] Add audio feedback on correct/incorrect using existing `AudioService`
+- [x] T046 [US3] Add 1.5s auto-advance timer after correct answer
+- [x] T047 [US3] Add logging for tile drops and round transitions
+- [x] T048 [US3] Run US3 tests: `flutter test test/widget/word_tile_widget_test.dart test/widget/blank_zone_test.dart test/widget/sentence_display_test.dart test/unit/application/savoring_cubit_test.dart`
 
 **Checkpoint**: Single-blank gameplay works: drag tile, get feedback, round advances
 

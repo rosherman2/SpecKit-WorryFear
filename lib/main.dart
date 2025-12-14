@@ -14,6 +14,7 @@ import 'presentation/screens/intro_screen.dart';
 import 'presentation/screens/review_screen.dart';
 import 'presentation/screens/welcome_screen.dart';
 import 'presentation/screens/savoring_intro_screen.dart';
+import 'presentation/screens/savoring_gameplay_screen.dart';
 
 /// Entry point for the config-driven cognitive training game.
 /// Initializes the app, logger, loads game config, and starts the UI.
@@ -104,7 +105,7 @@ class MindGOApp extends StatelessWidget {
             SavoringIntroScreen(savoringConfig: savoringConfig),
         '/gameplay': (context) => GameplayScreen(gameConfig: gameConfig),
         '/savoring/gameplay': (context) =>
-            const Placeholder(), // TODO: SavoringGameplayScreen
+            SavoringGameplayScreen(savoringConfig: savoringConfig),
       },
       onGenerateRoute: (settings) {
         // Handle /review route with arguments
