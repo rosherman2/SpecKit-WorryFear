@@ -5,12 +5,15 @@ import 'core/theme/app_theme.dart';
 import 'core/utils/app_logger.dart';
 import 'core/utils/app_bloc_observer.dart';
 import 'domain/models/game_config.dart';
+import 'domain/models/savoring_config.dart';
 import 'domain/models/session_scenario.dart';
 import 'domain/services/game_config_loader.dart';
+import 'domain/services/savoring_config_loader.dart';
 import 'presentation/screens/gameplay_screen.dart';
 import 'presentation/screens/intro_screen.dart';
 import 'presentation/screens/review_screen.dart';
 import 'presentation/screens/welcome_screen.dart';
+import 'presentation/screens/savoring_intro_screen.dart';
 
 /// Entry point for the config-driven cognitive training game.
 /// Initializes the app, logger, loads game config, and starts the UI.
@@ -44,7 +47,19 @@ void main() async {
     () => 'Config loaded: ${gameConfig.gameId} v${gameConfig.version}',
   );
 
-  runApp(MindGOApp(gameConfig: gameConfig));
+  // Load savoring game configuration
+  AppLogger.info('main', 'main', () => 'Loading savoring config');
+  final savoringConfig = await SavoringConfigLoader.load(
+    'assets/configs/savoring.json',
+  );
+  AppLogger.info(
+    'main',
+    'main',
+    () =>
+        'Savoring config loaded: ${savoringConfig.gameId} v${savoringConfig.version}',
+  );
+
+  runApp(MindGOApp(gameConfig: gameConfig, savoringConfig: savoringConfig));
 }
 
 /// [StatelessWidget] Root application widget for MindGO multi-game app.
@@ -57,10 +72,17 @@ void main() async {
 /// - Game configuration passed to all screens
 class MindGOApp extends StatelessWidget {
   /// Creates the root application widget.
-  const MindGOApp({required this.gameConfig, super.key});
+  const MindGOApp({
+    required this.gameConfig,
+    required this.savoringConfig,
+    super.key,
+  });
 
-  /// The loaded game configuration.
+  /// The loaded game configuration for Good Moment game.
   final GameConfig gameConfig;
+
+  /// The loaded savoring game configuration.
+  final SavoringConfig savoringConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +101,10 @@ class MindGOApp extends StatelessWidget {
         '/welcome': (context) => const WelcomeScreen(),
         '/good-moments/intro': (context) => IntroScreen(gameConfig: gameConfig),
         '/savoring/intro': (context) =>
-            const Placeholder(), // TODO: SavoringIntroScreen
+            SavoringIntroScreen(savoringConfig: savoringConfig),
         '/gameplay': (context) => GameplayScreen(gameConfig: gameConfig),
+        '/savoring/gameplay': (context) =>
+            const Placeholder(), // TODO: SavoringGameplayScreen
       },
       onGenerateRoute: (settings) {
         // Handle /review route with arguments

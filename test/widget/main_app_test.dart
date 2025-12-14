@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:worry_fear_game/main.dart';
 import 'package:worry_fear_game/domain/models/game_config.dart';
+import 'package:worry_fear_game/domain/models/savoring_config.dart';
 
 void main() {
   group('MindGOApp Widget Tests', () {
     late GameConfig mockGameConfig;
+    late SavoringConfig mockSavoringConfig;
 
     setUp(() {
       // Arrange: Create mock game config with all required fields
@@ -41,11 +43,54 @@ void main() {
         },
         'scenarios': [],
       });
+
+      // Create mock savoring config
+      mockSavoringConfig = SavoringConfig.fromJson({
+        'gameId': 'savoring-test',
+        'version': '1.0.0',
+        'intro': {
+          'title': 'Test Savoring',
+          'conceptText': ['Test concept'],
+          'benefitText': 'Test benefit',
+          'scientificTitle': 'Test Scientific',
+          'scientificContent': 'Test content',
+        },
+        'character': {
+          'idleImage': 'test/idle.png',
+          'affirmingImage': 'test/affirm.png',
+          'celebrationImage': 'test/celebrate.png',
+        },
+        'stems': List.generate(
+          10,
+          (i) => {
+            'id': 'stem-$i',
+            'templateText': 'Test {1}',
+            'blankCount': 1,
+            'blanks': [
+              {
+                'index': 1,
+                'tiles': [
+                  {'text': 't1', 'isCorrect': true},
+                  {'text': 't2', 'isCorrect': false},
+                  {'text': 't3', 'isCorrect': false},
+                ],
+                'incorrectFeedback': 'No',
+              },
+            ],
+            'correctFeedback': 'Yes',
+          },
+        ),
+      });
     });
 
     testWidgets('should have MindGO as app title', (WidgetTester tester) async {
       // Act: Build the app
-      await tester.pumpWidget(MindGOApp(gameConfig: mockGameConfig));
+      await tester.pumpWidget(
+        MindGOApp(
+          gameConfig: mockGameConfig,
+          savoringConfig: mockSavoringConfig,
+        ),
+      );
 
       // Assert: Find MaterialApp and check title
       final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -56,7 +101,12 @@ void main() {
       WidgetTester tester,
     ) async {
       // Act: Build the app
-      await tester.pumpWidget(MindGOApp(gameConfig: mockGameConfig));
+      await tester.pumpWidget(
+        MindGOApp(
+          gameConfig: mockGameConfig,
+          savoringConfig: mockSavoringConfig,
+        ),
+      );
 
       // Assert: Check initial route
       final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -65,7 +115,12 @@ void main() {
 
     testWidgets('should define /welcome route', (WidgetTester tester) async {
       // Act: Build the app
-      await tester.pumpWidget(MindGOApp(gameConfig: mockGameConfig));
+      await tester.pumpWidget(
+        MindGOApp(
+          gameConfig: mockGameConfig,
+          savoringConfig: mockSavoringConfig,
+        ),
+      );
 
       // Assert: Check that /welcome route exists
       final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -76,7 +131,12 @@ void main() {
       WidgetTester tester,
     ) async {
       // Act: Build the app
-      await tester.pumpWidget(MindGOApp(gameConfig: mockGameConfig));
+      await tester.pumpWidget(
+        MindGOApp(
+          gameConfig: mockGameConfig,
+          savoringConfig: mockSavoringConfig,
+        ),
+      );
 
       // Assert: Check that /good-moments/intro route exists
       final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -87,7 +147,12 @@ void main() {
       WidgetTester tester,
     ) async {
       // Act: Build the app
-      await tester.pumpWidget(MindGOApp(gameConfig: mockGameConfig));
+      await tester.pumpWidget(
+        MindGOApp(
+          gameConfig: mockGameConfig,
+          savoringConfig: mockSavoringConfig,
+        ),
+      );
 
       // Assert: Check that /savoring/intro route exists
       final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));

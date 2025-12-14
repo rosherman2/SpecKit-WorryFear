@@ -94,16 +94,16 @@
 
 ### Tests First (TDD)
 
-- [ ] T027 [P] [US2] Write widget test for `SavoringIntroScreen` in `test/widget/savoring_intro_screen_test.dart`
+- [x] T027 [P] [US2] Write widget test for `SavoringIntroScreen` in `test/widget/savoring_intro_screen_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T028 [P] [US2] Create `SavoringIntroScreen` in `lib/presentation/screens/savoring_intro_screen.dart`
-- [ ] T029 [US2] Connect intro screen to `SavoringConfig` for content
-- [ ] T030 [US2] Reuse `ExpandableSection` widget for scientific background
-- [ ] T031 [US2] Add route `/savoring/gameplay` for gameplay transition
-- [ ] T032 [US2] Add logging for intro screen navigation
-- [ ] T033 [US2] Run US2 tests: `flutter test test/widget/savoring_intro_screen_test.dart`
+- [x] T028 [P] [US2] Create `SavoringIntroScreen` in `lib/presentation/screens/savoring_intro_screen.dart`
+- [x] T029 [US2] Connect intro screen to `SavoringConfig` for content
+- [x] T030 [US2] Reuse `ExpandableSection` widget for scientific background
+- [x] T031 [US2] Add route `/savoring/gameplay` for gameplay transition
+- [x] T032 [US2] Add logging for intro screen navigation
+- [x] T033 [US2] Run US2 tests: `flutter test test/widget/savoring_intro_screen_test.dart`
 
 **Checkpoint**: Savoring intro displays correctly, Start navigates to gameplay
 
