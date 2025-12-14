@@ -1,0 +1,389 @@
+{
+    "gameId": "savoring-choice",
+    "version": "1.0",
+    "intro": {
+        "title": "Savoring Choice",
+        "conceptText": [
+            "Good moments happen all the time, but we do not always let them in.",
+            "This game helps you practice noticing the good and letting it stay a little longer."
+        ],
+        "benefitText": "The interpretation you choose shapes how you feel and what you do.",
+        "scientificTitle": "📚 Scientific Background",
+        "scientificContent": "Research shows that savoring—intentionally noticing and appreciating positive experiences—can increase well-being and resilience."
+    },
+    "character": {
+        "idleImage": "assets/images/savoring/character_idle.png",
+        "affirmingImage": "assets/images/savoring/character_affirming.png",
+        "celebrationImage": "assets/images/savoring/character_celebration.png"
+    },
+    "stems": [
+        {
+            "id": "stem-1",
+            "templateText": "It is okay to {1}",
+            "blankCount": 1,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "enjoy this moment",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "keep moving",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "focus on what is wrong",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That focuses away from the good. Try again."
+                }
+            ],
+            "correctFeedback": "You let the moment stay."
+        },
+        {
+            "id": "stem-2",
+            "templateText": "I can {1}",
+            "blankCount": 1,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "pause and notice this",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "rush past this",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "dismiss this feeling",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That pulls you away from the moment. Try another."
+                }
+            ],
+            "correctFeedback": "You made space to notice."
+        },
+        {
+            "id": "stem-3",
+            "templateText": "This feeling is {1}",
+            "blankCount": 1,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "worth noticing",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "probably nothing",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "going to disappear",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That dismisses the moment. Try another."
+                }
+            ],
+            "correctFeedback": "You valued what you felt."
+        },
+        {
+            "id": "stem-4",
+            "templateText": "I notice {1}",
+            "blankCount": 1,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "something good here",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "this will not last",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "I should move on",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That cuts the good short. Try another."
+                }
+            ],
+            "correctFeedback": "You let yourself see the good."
+        },
+        {
+            "id": "stem-5",
+            "templateText": "I can {1} this moment {2}",
+            "blankCount": 2,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "appreciate",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "dismiss",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "rush through",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That does not bring you closer. Try another."
+                },
+                {
+                    "index": 2,
+                    "tiles": [
+                        {
+                            "text": "fully",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "briefly",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "less",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That cuts the moment short. Try another."
+                }
+            ],
+            "correctFeedback": "You made space for the good."
+        },
+        {
+            "id": "stem-6",
+            "templateText": "It is {1} to feel {2}",
+            "blankCount": 2,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "okay",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "weird",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "pointless",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That adds judgment. Try another."
+                },
+                {
+                    "index": 2,
+                    "tiles": [
+                        {
+                            "text": "good about this",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "nothing about this",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "guilty about this",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That blocks the feeling. Try another."
+                }
+            ],
+            "correctFeedback": "You gave yourself permission."
+        },
+        {
+            "id": "stem-7",
+            "templateText": "I can {1} and {2}",
+            "blankCount": 2,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "stay with this",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "move past this",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "ignore this",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That pulls you away. Try another."
+                },
+                {
+                    "index": 2,
+                    "tiles": [
+                        {
+                            "text": "let it matter",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "minimize it",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "forget it",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That dismisses the moment. Try another."
+                }
+            ],
+            "correctFeedback": "You stayed present with the good."
+        },
+        {
+            "id": "stem-8",
+            "templateText": "This moment is {1} and I can {2}",
+            "blankCount": 2,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "here now",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "already gone",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "not important",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That takes you out of the moment. Try another."
+                },
+                {
+                    "index": 2,
+                    "tiles": [
+                        {
+                            "text": "appreciate it",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "rush through it",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "overlook it",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That reduces the experience. Try another."
+                }
+            ],
+            "correctFeedback": "You chose to savor."
+        },
+        {
+            "id": "stem-9",
+            "templateText": "I choose to {1} what feels {2}",
+            "blankCount": 2,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "notice",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "skip",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "question",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That avoids the good. Try another."
+                },
+                {
+                    "index": 2,
+                    "tiles": [
+                        {
+                            "text": "good",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "temporary",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "undeserved",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That blocks the feeling. Try another."
+                }
+            ],
+            "correctFeedback": "You let the good in."
+        },
+        {
+            "id": "stem-10",
+            "templateText": "I can {1} this feeling and {2}",
+            "blankCount": 2,
+            "blanks": [
+                {
+                    "index": 1,
+                    "tiles": [
+                        {
+                            "text": "hold",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "release",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "avoid",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That lets it slip away. Try another."
+                },
+                {
+                    "index": 2,
+                    "tiles": [
+                        {
+                            "text": "let it grow",
+                            "isCorrect": true
+                        },
+                        {
+                            "text": "keep it small",
+                            "isCorrect": false
+                        },
+                        {
+                            "text": "doubt it",
+                            "isCorrect": false
+                        }
+                    ],
+                    "incorrectFeedback": "That limits the experience. Try another."
+                }
+            ],
+            "correctFeedback": "You savored fully."
+        }
+    ]
+}

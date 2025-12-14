@@ -25,12 +25,12 @@
 
 **Purpose**: Project setup, app renaming, routing infrastructure
 
-- [ ] T001 Rename `WorryFearApp` to `MindGOApp` in `lib/main.dart`
-- [ ] T002 Update app title to "MindGO" in `lib/main.dart`
-- [ ] T003 Add route `/welcome` as initial route in `lib/main.dart`
-- [ ] T004 [P] Add `AppBlocObserver` for debugging in `lib/core/utils/app_bloc_observer.dart`
-- [ ] T005 [P] Create placeholder character images in `assets/images/savoring/` (idle, affirming, celebration)
-- [ ] T006 Register new asset paths in `pubspec.yaml`
+- [x] T001 Rename `WorryFearApp` to `MindGOApp` in `lib/main.dart`
+- [x] T002 Update app title to "MindGO" in `lib/main.dart`
+- [x] T003 Add route `/welcome` as initial route in `lib/main.dart`
+- [x] T004 [P] Add `AppBlocObserver` for debugging in `lib/core/utils/app_bloc_observer.dart`
+- [x] T005 [P] Create placeholder character images in `assets/images/savoring/` (idle, affirming, celebration)
+- [x] T006 Register new asset paths in `pubspec.yaml`
 
 ---
 
@@ -42,20 +42,20 @@
 
 ### Tests First (TDD)
 
-- [ ] T007 [P] Write unit test for `WordTile` model in `test/unit/domain/models/word_tile_test.dart`
-- [ ] T008 [P] Write unit test for `SentenceStem` model in `test/unit/domain/models/sentence_stem_test.dart`
-- [ ] T009 [P] Write unit test for `SavoringConfig` model in `test/unit/domain/models/savoring_config_test.dart`
-- [ ] T010 Write unit test for `SavoringConfigLoader` in `test/unit/domain/services/savoring_config_loader_test.dart`
+- [x] T007 [P] Write unit test for `WordTile` model in `test/unit/domain/models/word_tile_test.dart`
+- [x] T008 [P] Write unit test for `SentenceStem` model in `test/unit/domain/models/sentence_stem_test.dart`
+- [x] T009 [P] Write unit test for `SavoringConfig` model in `test/unit/domain/models/savoring_config_test.dart`
+- [x] T010 Write unit test for `SavoringConfigLoader` in `test/unit/domain/services/savoring_config_loader_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T011 [P] Create `WordTile` model in `lib/domain/models/word_tile.dart`
-- [ ] T012 [P] Create `BlankConfig` model in `lib/domain/models/blank_config.dart`
-- [ ] T013 Create `SentenceStem` model in `lib/domain/models/sentence_stem.dart` (depends on T011, T012)
-- [ ] T014 Create `SavoringConfig` model in `lib/domain/models/savoring_config.dart` (depends on T013)
-- [ ] T015 Create `SavoringConfigLoader` service in `lib/domain/services/savoring_config_loader.dart`
-- [ ] T016 Create `savoring.json` config with 10 stems in `assets/configs/savoring.json`
-- [ ] T017 Run all foundational tests: `flutter test test/unit/domain/`
+- [x] T011 [P] Create `WordTile` model in `lib/domain/models/word_tile.dart`
+- [x] T012 [P] Create `BlankConfig` model in `lib/domain/models/blank_config.dart`
+- [x] T013 Create `SentenceStem` model in `lib/domain/models/sentence_stem.dart` (depends on T011, T012)
+- [x] T014 Create `SavoringConfig` model in `lib/domain/models/savoring_config.dart` (depends on T013)
+- [x] T015 Create `SavoringConfigLoader` service in `lib/domain/services/savoring_config_loader.dart`
+- [x] T016 Create `savoring.json` config with 10 stems in `assets/configs/savoring.json`
+- [x] T017 Run all foundational tests: `flutter test test/unit/domain/`
 
 **Checkpoint**: Foundation ready - all models parse and validate correctly
 
@@ -69,18 +69,18 @@
 
 ### Tests First (TDD)
 
-- [ ] T018 [P] [US1] Write widget test for `GameCard` in `test/widget/game_card_test.dart`
-- [ ] T019 [P] [US1] Write widget test for `WelcomeScreen` in `test/widget/welcome_screen_test.dart`
+- [x] T018 [P] [US1] Write widget test for `GameCard` in `test/widget/game_card_test.dart`
+- [x] T019 [P] [US1] Write widget test for `WelcomeScreen` in `test/widget/welcome_screen_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T020 [P] [US1] Create `GameCard` widget in `lib/presentation/widgets/game_card.dart`
-- [ ] T021 [US1] Create `WelcomeScreen` in `lib/presentation/screens/welcome_screen.dart` (depends on T020)
-- [ ] T022 [US1] Add route `/good-moments/intro` for existing game in `lib/main.dart`
-- [ ] T023 [US1] Add route `/savoring/intro` for savoring game in `lib/main.dart`
-- [ ] T024 [US1] Update existing `CompletionScreen` to navigate to `/welcome` on Finish
-- [ ] T025 [US1] Add logging for game selection in `WelcomeScreen`
-- [ ] T026 [US1] Run US1 tests: `flutter test test/widget/welcome_screen_test.dart test/widget/game_card_test.dart`
+- [x] T020 [P] [US1] Create `GameCard` widget in `lib/presentation/widgets/game_card.dart`
+- [x] T021 [US1] Create `WelcomeScreen` in `lib/presentation/screens/welcome_screen.dart` (depends on T020)
+- [x] T022 [US1] Add route `/good-moments/intro` for existing game in `lib/main.dart`
+- [x] T023 [US1] Add route `/savoring/intro` for savoring game in `lib/main.dart`
+- [x] T024 [US1] Update existing `CompletionScreen` to navigate to `/welcome` on Finish
+- [x] T025 [US1] Add logging for game selection in `WelcomeScreen`
+- [x] T026 [US1] Run US1 tests: `flutter test test/widget/welcome_screen_test.dart test/widget/game_card_test.dart`
 
 **Checkpoint**: App launches to welcome screen, both game cards display, tapping navigates correctly
 

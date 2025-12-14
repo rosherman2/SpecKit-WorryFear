@@ -172,7 +172,12 @@ class CompletionScreen extends StatelessWidget {
                 // Finish button
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    // Navigate to welcome screen to choose next game
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/welcome',
+                      (route) => false,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.success,
