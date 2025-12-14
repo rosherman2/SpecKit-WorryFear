@@ -173,17 +173,17 @@
 
 ### Tests First (TDD)
 
-- [ ] T058 [P] [US5] Write widget test for `SavoringCompletionScreen` in `test/widget/savoring_completion_screen_test.dart`
+- [x] T058 [P] [US5] Write widget test for `SavoringCompletionScreen` in `test/widget/savoring_completion_screen_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T059 [P] [US5] Create `SavoringCompletionScreen` in `lib/presentation/screens/savoring_completion_screen.dart`
-- [ ] T060 [US5] Add route `/savoring/completion` in `lib/main.dart`
-- [ ] T061 [US5] Update `SavoringCubit` to emit `GameComplete` state after stem 10
-- [ ] T062 [US5] Navigate from gameplay to completion when game complete
-- [ ] T063 [US5] Add Finish button that returns to `/welcome`
-- [ ] T064 [US5] Add celebration audio on completion
-- [ ] T065 [US5] Run US5 tests: `flutter test test/widget/savoring_completion_screen_test.dart`
+- [x] T059 [P] [US5] Create `SavoringCompletionScreen` in `lib/presentation/screens/savoring_completion_screen.dart`
+- [x] T060 [US5] Add route `/savoring/completion` in `lib/main.dart`
+- [x] T061 [US5] Update `SavoringCubit` to emit `GameComplete` state after stem 10
+- [x] T062 [US5] Navigate from gameplay to completion when game complete
+- [x] T063 [US5] Add Finish button that returns to `/welcome`
+- [x] T064 [US5] Add celebration audio on completion
+- [x] T065 [US5] Run US5 tests: `flutter test test/widget/savoring_completion_screen_test.dart`
 
 **Checkpoint**: Completion screen appears after 10 rounds, Finish returns to welcome
 
