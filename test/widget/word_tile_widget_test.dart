@@ -141,5 +141,81 @@ void main() {
       await gesture.up();
       await tester.pump();
     });
+
+    testWidgets('should show glow effect when showGlow is true', (
+      WidgetTester tester,
+    ) async {
+      // Arrange: Create a word tile
+      final tile = WordTile.fromJson({
+        'text': 'glowing tile',
+        'isCorrect': true,
+      });
+
+      // Act: Build the widget with showGlow
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: WordTileWidget(tile: tile, showGlow: true)),
+        ),
+      );
+      await tester.pump(
+        const Duration(milliseconds: 600),
+      ); // Wait for glow delay
+
+      // Assert: Find AnimatedBuilder (pulsing glow effect)
+      expect(find.byType(AnimatedBuilder), findsWidgets);
+    });
+
+    testWidgets('should not show glow when showGlow is false', (
+      WidgetTester tester,
+    ) async {
+      // Arrange: Create a word tile
+      final tile = WordTile.fromJson({'text': 'no glow', 'isCorrect': true});
+
+      // Act: Build the widget without showGlow
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: WordTileWidget(tile: tile, showGlow: false)),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 600));
+
+      // Assert: Should still have container but no glow animation
+      expect(find.text('no glow'), findsOneWidget);
+    });
+
+    testWidgets('should hide glow when drag starts', (
+      WidgetTester tester,
+    ) async {
+      // Arrange: Create a word tile with glow
+      final tile = WordTile.fromJson({'text': 'glow hide', 'isCorrect': true});
+      bool glowHidden = false;
+
+      // Act: Build the widget with showGlow and onDragStarted callback
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: WordTileWidget(
+              tile: tile,
+              showGlow: true,
+              onDragStarted: () => glowHidden = true,
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 600)); // Wait for glow
+
+      // Start dragging
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.text('glow hide')),
+      );
+      await tester.pump();
+
+      // Assert: onDragStarted was called
+      expect(glowHidden, isTrue);
+
+      // Clean up
+      await gesture.up();
+      await tester.pump();
+    });
   });
 }

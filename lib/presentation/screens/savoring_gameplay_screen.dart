@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../../application/savoring/savoring_cubit.dart';
 import '../../application/savoring/savoring_state.dart';
 import '../../domain/models/savoring_config.dart';
 import '../../domain/models/word_tile.dart';
+import '../../domain/services/first_time_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/app_logger.dart';
 import '../widgets/sentence_display.dart';
@@ -35,6 +37,57 @@ class SavoringGameplayScreen extends StatefulWidget {
 
 class _SavoringGameplayScreenState extends State<SavoringGameplayScreen> {
   Timer? _autoAdvanceTimer;
+  bool _isFirstTime = true; // Default to true, will be updated after check
+  bool _glowHidden = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstTime();
+  }
+
+  Future<void> _checkFirstTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final service = FirstTimeService(prefs);
+    final isFirstTime = await service.isFirstTimeSavoringGame();
+    AppLogger.info(
+      'SavoringGameplayScreen',
+      '_checkFirstTime',
+      () => 'First time check result: $isFirstTime',
+    );
+    if (mounted) {
+      setState(() {
+        _isFirstTime = isFirstTime;
+      });
+      AppLogger.debug(
+        'SavoringGameplayScreen',
+        '_checkFirstTime',
+        () => 'State updated: _isFirstTime=$_isFirstTime',
+      );
+    }
+  }
+
+  void _hideGlow() {
+    AppLogger.info(
+      'SavoringGameplayScreen',
+      '_hideGlow',
+      () => 'Hiding glow, _glowHidden was: $_glowHidden',
+    );
+    setState(() {
+      _glowHidden = true;
+    });
+  }
+
+  Future<void> _markFirstTimeComplete() async {
+    if (_isFirstTime) {
+      final prefs = await SharedPreferences.getInstance();
+      final service = FirstTimeService(prefs);
+      await service.markSavoringGameCompleted();
+      setState(() {
+        _isFirstTime = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -79,6 +132,10 @@ class _SavoringGameplayScreenState extends State<SavoringGameplayScreen> {
 
       _autoAdvanceTimer = Timer(const Duration(milliseconds: 1500), () {
         if (mounted) {
+          // Mark first-time complete after Round 1
+          if (state.currentRound == 1) {
+            _markFirstTimeComplete();
+          }
           context.read<SavoringCubit>().advanceRound();
         }
       });
@@ -233,7 +290,35 @@ class _SavoringGameplayScreenState extends State<SavoringGameplayScreen> {
                       (t) => t.text == tile.text,
                     );
 
-                    return WordTileWidget(tile: tile, isEnabled: !isUsed);
+                    // Show glow on correct tile in Round 1 for first-time users
+                    final shouldGlow =
+                        _isFirstTime &&
+                        !_glowHidden &&
+                        state.currentRound == 1 &&
+                        tile.isCorrect &&
+                        !isUsed;
+
+                    if (tile.isCorrect) {
+                      AppLogger.debug(
+                        'SavoringGameplayScreen',
+                        'build',
+                        () =>
+                            'Glow check for "${tile.text}": '
+                            '_isFirstTime=$_isFirstTime, '
+                            '_glowHidden=$_glowHidden, '
+                            'currentRound=${state.currentRound}, '
+                            'isCorrect=${tile.isCorrect}, '
+                            'isUsed=$isUsed, '
+                            'shouldGlow=$shouldGlow',
+                      );
+                    }
+
+                    return WordTileWidget(
+                      tile: tile,
+                      isEnabled: !isUsed,
+                      showGlow: shouldGlow,
+                      onDragStarted: _hideGlow,
+                    );
                   }).toList(),
                 ),
 

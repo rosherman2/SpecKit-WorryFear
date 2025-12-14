@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/models/savoring_config.dart';
+import '../../domain/services/first_time_service.dart';
 import '../../core/utils/app_logger.dart';
 import '../../core/theme/app_colors.dart';
 import '../widgets/expandable_section.dart';
@@ -163,6 +166,33 @@ class SavoringIntroScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+
+              // DEBUG: Reset first-time glow button (only visible in debug mode)
+              if (kDebugMode)
+                TextButton(
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    final service = FirstTimeService(prefs);
+                    await service.reset();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'First-time glow reset! Restart the game to see the glow.',
+                          ),
+                          backgroundColor: AppColors.gold,
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text(
+                    '✨ Reset First-Time Glow (Debug)',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

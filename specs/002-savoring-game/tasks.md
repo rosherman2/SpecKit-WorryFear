@@ -222,18 +222,20 @@
 
 ### Tests First (TDD)
 
-- [ ] T075 [US3] Add first-time glow test cases to `test/widget/word_tile_widget_test.dart`
-- [ ] T076 [US3] Write unit test for first-time flag persistence in `test/unit/domain/services/first_time_service_test.dart`
+- [x] T075 [US3] Add first-time glow test cases to `test/widget/word_tile_widget_test.dart`
+- [x] T076 [US3] Write unit test for first-time flag persistence in `test/unit/domain/services/first_time_service_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T077 [P] [US3] Create `FirstTimeService` using SharedPreferences in `lib/domain/services/first_time_service.dart`
-- [ ] T078 [US3] Add glow effect to `WordTileWidget` when `showGlow: true`
-- [ ] T079 [US3] Add 0.5s delay before glow appears
-- [ ] T080 [US3] Hide glow when any tile picked up (onDragStarted)
-- [ ] T081 [US3] Update `SavoringCubit` to check first-time flag on game start
-- [ ] T082 [US3] Mark first-time as complete after Round 1
-- [ ] T083 [US3] Run first-time glow tests: `flutter test test/widget/word_tile_widget_test.dart test/unit/domain/services/first_time_service_test.dart`
+- [x] T077 [P] [US3] Create `FirstTimeService` using SharedPreferences in `lib/domain/services/first_time_service.dart`
+- [x] T078 [US3] Add glow effect to `WordTileWidget` when `showGlow: true`
+- [x] T079 [US3] Add 0.5s delay before glow appears
+- [x] T080 [US3] Hide glow when any tile picked up (onDragStarted)
+- [x] T081 [US3] Update `SavoringGameplayScreen` to check first-time flag on game start
+- [x] T082 [US3] Mark first-time as complete after Round 1
+- [x] T083 [US3] Run first-time glow tests: `flutter test test/widget/word_tile_widget_test.dart test/unit/domain/services/first_time_service_test.dart`
+
+**Note**: Implementation follows same pattern as `OnboardingService` with debug reset button in intro screen.
 
 **Checkpoint**: First-time glow appears once and never again
 
