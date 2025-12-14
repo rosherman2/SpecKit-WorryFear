@@ -10,6 +10,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/utils/app_logger.dart';
 import '../widgets/sentence_display.dart';
 import '../widgets/word_tile_widget.dart';
+import '../widgets/character_widget.dart';
 
 /// [StatefulWidget] Savoring game gameplay screen.
 /// Purpose: Main game screen where users complete sentence stems.
@@ -165,17 +166,11 @@ class _SavoringGameplayScreenState extends State<SavoringGameplayScreen> {
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              // Character placeholder
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Center(
-                  child: Text('✨', style: TextStyle(fontSize: 40)),
-                ),
+              // Character with dynamic state
+              CharacterWidget(
+                state: state.isCurrentBlankCorrect == true
+                    ? CharacterState.affirming
+                    : CharacterState.idle,
               ),
               const SizedBox(height: 32),
 

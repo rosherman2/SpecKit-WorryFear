@@ -197,18 +197,18 @@
 
 ### Tests First (TDD)
 
-- [ ] T066 [P] [US6] Write widget test for `CharacterWidget` in `test/widget/character_widget_test.dart`
+- [x] T066 [P] [US6] Write widget test for `CharacterWidget` in `test/widget/character_widget_test.dart`
 
 ### Implementation (Make Tests Pass)
 
-- [ ] T067 [P] [US6] Create `CharacterWidget` with idle state in `lib/presentation/widgets/character_widget.dart`
-- [ ] T068 [US6] Add breathing animation using `AnimationController` with `SingleTickerProviderStateMixin`
-- [ ] T069 [US6] Add `RepaintBoundary` around character for 60fps performance
-- [ ] T070 [US6] Add affirming expression transition on correct answer
-- [ ] T071 [US6] Add AnimatedSwitcher for smooth expression crossfade
-- [ ] T072 [US6] Integrate `CharacterWidget` into `SavoringGameplayScreen`
-- [ ] T073 [US6] Add celebration expression in `SavoringCompletionScreen`
-- [ ] T074 [US6] Run US6 tests: `flutter test test/widget/character_widget_test.dart`
+- [x] T067 [P] [US6] Create `CharacterWidget` with idle state in `lib/presentation/widgets/character_widget.dart`
+- [x] T068 [US6] Add breathing animation using `AnimationController` with `SingleTickerProviderStateMixin`
+- [x] T069 [US6] Add `RepaintBoundary` around character for 60fps performance
+- [x] T070 [US6] Add affirming expression transition on correct answer
+- [x] T071 [US6] Add AnimatedSwitcher for smooth expression crossfade
+- [x] T072 [US6] Integrate `CharacterWidget` into `SavoringGameplayScreen`
+- [x] T073 [US6] Add celebration expression in `SavoringCompletionScreen`
+- [x] T074 [US6] Run US6 tests: `flutter test test/widget/character_widget_test.dart`
 
 **Checkpoint**: Character displays correct expressions for all game states
 

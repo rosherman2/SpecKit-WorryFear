@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../application/savoring/savoring_state.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/app_logger.dart';
+import '../widgets/character_widget.dart';
 
 /// [StatelessWidget] Completion screen for savoring game.
 /// Purpose: Display final score, celebration, and navigation back to welcome.
@@ -51,17 +52,7 @@ class SavoringCompletionScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Character celebration
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: AppColors.gold.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Center(
-                    child: Text('✨', style: TextStyle(fontSize: 64)),
-                  ),
-                ),
+                const CharacterWidget(state: CharacterState.celebration),
                 const SizedBox(height: 32),
 
                 // Celebration title
